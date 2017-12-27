@@ -3,16 +3,15 @@ Introduction
 ============
 
 .. image:: https://readthedocs.org/projects/adafruit-circuitpython-motor/badge/?version=latest
-
     :target: https://circuitpython.readthedocs.io/projects/motor/en/latest/
-
     :alt: Documentation Status
 
 .. image :: https://img.shields.io/discord/327254708534116352.svg
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-TODO
+This helper library provides higher level objects to control motors and servos based on one or more
+PWM outputs.
 
 Dependencies
 =============

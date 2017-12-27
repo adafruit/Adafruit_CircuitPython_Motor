@@ -43,11 +43,14 @@ class _BaseServo:
        :param int max_pulse: The maximum pulse length of the servo in microseconds.
        :param int range: The physical range of the servo corresponding to the signal's duty in
          degrees."""
-    def __init__(self, pwm_out, *, min_pulse=1000, max_pulse=2000, trim=0):
-        self._min_duty = (min_pulse * 0xffff * pwm_out.frequency) / 1000000
-        max_duty = (max_pulse * 0xffff * pwm_out.frequency) / 1000000
-        self._duty_range = max_duty - self._min_duty
+    def __init__(self, pwm_out, *, min_pulse=1000, max_pulse=2000):
+        self._min_duty = int((min_pulse * pwm_out.frequency) / 1000000 * 0xffff)
+        max_duty = (max_pulse * pwm_out.frequency) / 1000000 * 0xffff
+        self._duty_range = int(max_duty - self._min_duty)
+        print(self._min_duty, self._duty_range)
         self._pwm_out = pwm_out
+        self._min_pulse = min_pulse
+        self._pulse_range = max_pulse - min_pulse
 
     @property
     def _fraction(self):
@@ -56,7 +59,9 @@ class _BaseServo:
     @_fraction.setter
     def _fraction(self, value):
         """The fraction of pulse high."""
-        self._pwm_out.duty_cycle = self.min_duty + value * self._duty_range
+        duty_cycle = self._min_duty + int(value * self._duty_range)
+        print(self._min_pulse + int(value * self._pulse_range))
+        self._pwm_out.duty_cycle = duty_cycle
 
 class Servo(_BaseServo):
     """Control the position of a servo.
@@ -66,7 +71,8 @@ class Servo(_BaseServo):
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
        :param int max_pulse: The maximum pulse length of the servo in microseconds.
          :param int trim: Slight shift of values to calibrate stopped value in microseconds."""
-    def __init__(self, pwm_out, *, actuation_range=180, min_pulse=1000, max_pulse=2000, trim=0):
+    def __init__(self, pwm_out, *, actuation_range=180, min_pulse=1000, max_pulse=2000):
+        super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self._actuation_range = actuation_range
         self._pwm = pwm_out
 
@@ -75,10 +81,11 @@ class Servo(_BaseServo):
         return self._actuation_range * self._fraction
 
     @angle.setter
-    def angle(self, value):
+    def angle(self, new_angle):
         """The servo angle in degrees."""
-        if value < 0 or value > self._actuation_range:
+        if new_angle < 0 or new_angle > self._actuation_range:
             raise ValueError("Angle out of range")
+        self._fraction = new_angle / self._actuation_range
 
 class ContinuousServo(_BaseServo):
     """Control a continuous rotation servo.
@@ -99,7 +106,7 @@ class ContinuousServo(_BaseServo):
             raise ValueError("Throttle must be between -1.0 and 1.0")
         if value is None:
             raise ValueError("Continuous servos cannot spin freely")
-        self._fraction = int((value + 1) / 2)
+        self._fraction = (value + 1) / 2
 
     def __enter__(self):
         return self
