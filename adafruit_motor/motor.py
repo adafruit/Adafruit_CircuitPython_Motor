@@ -30,11 +30,11 @@ the PWM. The `Adafruit Stepper + DC Motor FeatherWing <https://www.adafruit.com/
 Shield for Arduino v2 Kit - v2.3 <https://www.adafruit.com/product/1438>`_ do this for popular form
 factors already.
 
+.. note:: The TB6612 boards feature three inputs XIN1, XIN2 and PWMX. Since we PWM the INs directly
+  its expected that the PWM pin is consistently high.
 
 * Author(s): Scott Shawcroft
 """
-
-import math
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_motor.git"
@@ -63,9 +63,9 @@ class DCMotor:
         if self._positive.duty_cycle > 0 and self._negative.duty_cycle > 0:
             raise RuntimeError("PWMs in invalid state")
         value = max(self._positive.duty_cycle, self._negative.duty_cycle) / 0xffff
-        if self._negative > 0:
+        if self._negative.duty_cycle > 0:
             return -1 * value
-        return values
+        return value
 
     @throttle.setter
     def throttle(self, value):
@@ -78,7 +78,7 @@ class DCMotor:
             self._positive.duty_cycle = 0xffff
             self._negative.duty_cycle = 0xffff
         else:
-            duty_cycle = 0xffff * math.abs(value)
+            duty_cycle = int(0xffff * abs(value))
             if value < 0:
                 self._positive.duty_cycle = 0
                 self._negative.duty_cycle = duty_cycle

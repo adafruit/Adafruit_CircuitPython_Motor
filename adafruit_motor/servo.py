@@ -49,8 +49,6 @@ class _BaseServo:
         self._duty_range = int(max_duty - self._min_duty)
         print(self._min_duty, self._duty_range)
         self._pwm_out = pwm_out
-        self._min_pulse = min_pulse
-        self._pulse_range = max_pulse - min_pulse
 
     @property
     def _fraction(self):
@@ -60,7 +58,6 @@ class _BaseServo:
     def _fraction(self, value):
         """The fraction of pulse high."""
         duty_cycle = self._min_duty + int(value * self._duty_range)
-        print(self._min_pulse + int(value * self._pulse_range))
         self._pwm_out.duty_cycle = duty_cycle
 
 class Servo(_BaseServo):
