@@ -22,9 +22,11 @@ deploy:
     tags: true
 
 install:
-  - pip install pylint circuitpython-build-tools
+  - pip install pylint circuitpython-build-tools pytest
 
 script:
-  - pylint adafruit_motor.py
+  - py.tests
+  - pylint adafruit_motor/*.py
   - ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name examples/*.py)
+  - ([[ ! -d "tests" ]] || pylint --disable=missing-docstring tests/*.py)
   - circuitpython-build-bundles --filename_prefix adafruit-circuitpython-motor --library_location .

@@ -37,7 +37,7 @@ factors already.
 """
 
 __version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_motor.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
 class DCMotor:
     """DC motor driver. ``positive_pwm`` and ``negative_pwm`` can be swapped if the motor runs in

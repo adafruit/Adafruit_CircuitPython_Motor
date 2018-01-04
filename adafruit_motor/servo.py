@@ -29,14 +29,12 @@ loops enable pulse width modulated control to determine position or rotational s
 * Author(s): Scott Shawcroft
 """
 
-# imports
-
 __version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_motor.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
-import math
-
-class _BaseServo:
+# We disable the too few public methods check because this is a private base class for the two types
+# of servos.
+class _BaseServo: # pylint: disable-msg=too-few-public-methods
     """Shared base class that handles pulse output based on a value between 0 and 1.0
 
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
@@ -47,7 +45,6 @@ class _BaseServo:
         self._min_duty = int((min_pulse * pwm_out.frequency) / 1000000 * 0xffff)
         max_duty = (max_pulse * pwm_out.frequency) / 1000000 * 0xffff
         self._duty_range = int(max_duty - self._min_duty)
-        print(self._min_duty, self._duty_range)
         self._pwm_out = pwm_out
 
     @property
@@ -75,11 +72,11 @@ class Servo(_BaseServo):
 
     @property
     def angle(self):
+        """The servo angle in degrees."""
         return self._actuation_range * self._fraction
 
     @angle.setter
     def angle(self, new_angle):
-        """The servo angle in degrees."""
         if new_angle < 0 or new_angle > self._actuation_range:
             raise ValueError("Angle out of range")
         self._fraction = new_angle / self._actuation_range

@@ -1,6 +1,6 @@
 import time
 
-from board import *
+from board import SCL, SDA
 import busio
 
 # Import the PCA9685 module. Available in the bundle and here:
