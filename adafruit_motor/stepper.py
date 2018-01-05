@@ -97,7 +97,6 @@ class StepperMotor:
 
         # Energize coils as appropriate:
         for i in range(4):
-            print(i, hex(duty_cycles[i]))
             self._coil[i].duty_cycle = duty_cycles[i]
 
     def onestep(self, *, direction=FORWARD, style=SINGLE):
@@ -138,14 +137,10 @@ class StepperMotor:
             elif style == SINGLE or style == DOUBLE:
                 step_size = full_step
 
-        print(step_size, MICROSTEP)
-
         if direction == FORWARD:
             self._current_microstep += step_size
         else:
             self._current_microstep -= step_size
-
-        print(self._current_microstep)
 
         # Now that we know our target microstep we can determine how to energize the four coils.
         self._update_coils(microstepping=style == MICROSTEP)
