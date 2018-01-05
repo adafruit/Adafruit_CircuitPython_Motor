@@ -23,7 +23,10 @@
 `adafruit_motor.stepper`
 ====================================================
 
-TODO(description)
+Stepper motors feature multiple wire coils that are used to rotate the magnets connected to the
+motor shaft in a precise way. Each increment of the motor is called a step. Stepper motors have a
+varying number of steps per rotation so check the motor's documentation to determine exactly how
+precise each step is.
 
 * Author(s): Tony DiCola, Scott Shawcroft
 """
@@ -57,13 +60,13 @@ MICROSTEP = const(4)
 class StepperMotor:
     """A bipolar stepper motor or four coil unipolar motor.
 
-    :param ~pulseio.PWMOut ain1: `PWMOut`-compatible output connected to the driver for the first
+    :param ~pulseio.PWMOut ain1: `pulseio.PWMOut`-compatible output connected to the driver for the first
       coil (unipolar) or first input to first coil (bipolar).
-    :param ~pulseio.PWMOut ain2: `PWMOut`-compatible output connected to the driver for the third
+    :param ~pulseio.PWMOut ain2: `pulseio.PWMOut`-compatible output connected to the driver for the third
       coil (unipolar) or second input to first coil (bipolar).
-    :param ~pulseio.PWMOut bin1: `PWMOut`-compatible output connected to the driver for the second
+    :param ~pulseio.PWMOut bin1: `pulseio.PWMOut`-compatible output connected to the driver for the second
       coil (unipolar) or second input to second coil (bipolar).
-    :param ~pulseio.PWMOut bin2: `PWMOut`-compatible output connected to the driver for the fourth
+    :param ~pulseio.PWMOut bin2: `pulseio.PWMOut`-compatible output connected to the driver for the fourth
       coil (unipolar) or second input to second coil (bipolar).
     :param int microsteps: Number of microsteps between full steps. Must be at least 2 and even.
     """

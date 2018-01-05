@@ -26,8 +26,9 @@
 Simple control of a DC motor. DC motors have two wires and should not be connected directly to
 the PWM connections. Instead use intermediate circuitry to control a much stronger power source with
 the PWM. The `Adafruit Stepper + DC Motor FeatherWing <https://www.adafruit.com/product/2927>`_,
-`Adafruit TB6612 1.2A DC/Stepper Motor Driver Breakout Board <>`_ and `Adafruit Motor/Stepper/Servo
-Shield for Arduino v2 Kit - v2.3 <https://www.adafruit.com/product/1438>`_ do this for popular form
+`Adafruit TB6612 1.2A DC/Stepper Motor Driver Breakout Board
+<https://www.adafruit.com/product/2448>`_ and `Adafruit Motor/Stepper/Servo Shield for Arduino v2
+Kit - v2.3 <https://www.adafruit.com/product/1438>`_ do this for popular form
 factors already.
 
 .. note:: The TB6612 boards feature three inputs XIN1, XIN2 and PWMX. Since we PWM the INs directly
