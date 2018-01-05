@@ -1,9 +1,9 @@
-# This example uses an Adafruit Stepper and DC Motor FeatherWing to run a DC Motor.
+# This example uses an Adafruit Stepper and DC Motor FeatherWing to run a Stepper Motor.
 #   https://www.adafruit.com/product/2927
 
 import time
 
-from board import *
+from board import SCL, SDA
 import busio
 
 # Import the PCA9685 module. Available in the bundle and here:
@@ -25,7 +25,8 @@ pca.frequency = 1600
 
 pca.channels[7].duty_cycle = 0xffff
 pca.channels[2].duty_cycle = 0xffff
-stepper_motor = stepper.StepperMotor(pca.channels[4], pca.channels[3], pca.channels[5], pca.channels[6], microsteps=4)
+stepper_motor = stepper.StepperMotor(pca.channels[4], pca.channels[3], # Motor 3
+                                     pca.channels[5], pca.channels[6]) # Motor 4
 
 for i in range(100):
     stepper_motor.onestep()
