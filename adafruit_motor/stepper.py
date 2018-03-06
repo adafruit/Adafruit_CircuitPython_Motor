@@ -60,14 +60,14 @@ MICROSTEP = const(4)
 class StepperMotor:
     """A bipolar stepper motor or four coil unipolar motor.
 
-    :param ~pulseio.PWMOut ain1: `pulseio.PWMOut`-compatible output connected to the driver for the first
-      coil (unipolar) or first input to first coil (bipolar).
-    :param ~pulseio.PWMOut ain2: `pulseio.PWMOut`-compatible output connected to the driver for the third
-      coil (unipolar) or second input to first coil (bipolar).
-    :param ~pulseio.PWMOut bin1: `pulseio.PWMOut`-compatible output connected to the driver for the second
-      coil (unipolar) or second input to second coil (bipolar).
-    :param ~pulseio.PWMOut bin2: `pulseio.PWMOut`-compatible output connected to the driver for the fourth
-      coil (unipolar) or second input to second coil (bipolar).
+    :param ~pulseio.PWMOut ain1: `pulseio.PWMOut`-compatible output connected to the driver for
+      the first coil (unipolar) or first input to first coil (bipolar).
+    :param ~pulseio.PWMOut ain2: `pulseio.PWMOut`-compatible output connected to the driver for
+      the third coil (unipolar) or second input to first coil (bipolar).
+    :param ~pulseio.PWMOut bin1: `pulseio.PWMOut`-compatible output connected to the driver for
+      the second coil (unipolar) or second input to second coil (bipolar).
+    :param ~pulseio.PWMOut bin2: `pulseio.PWMOut`-compatible output connected to the driver for
+      the fourth coil (unipolar) or second input to second coil (bipolar).
     :param int microsteps: Number of microsteps between full steps. Must be at least 2 and even.
     """
     def __init__(self, ain1, ain2, bin1, bin2, *, microsteps=16):
