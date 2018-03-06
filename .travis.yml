@@ -23,7 +23,7 @@ deploy:
     tags: true
 
 install:
-  - pip install pylint circuitpython-build-tools Sphinx sphinx-rtd-theme
+  - pip install pylint circuitpython-build-tools Sphinx sphinx-rtd-theme pytest
 
 script:
   - py.tests
