@@ -37,10 +37,9 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 class _BaseServo: # pylint: disable-msg=too-few-public-methods
     """Shared base class that handles pulse output based on a value between 0 and 1.0
 
+       :param ~pulseio.PWMOut pwm_out: PWM output object.
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
-       :param int max_pulse: The maximum pulse length of the servo in microseconds.
-       :param int range: The physical range of the servo corresponding to the signal's duty in
-         degrees."""
+       :param int max_pulse: The maximum pulse length of the servo in microseconds."""
     def __init__(self, pwm_out, *, min_pulse=1000, max_pulse=2000):
         self._min_duty = int((min_pulse * pwm_out.frequency) / 1000000 * 0xffff)
         max_duty = (max_pulse * pwm_out.frequency) / 1000000 * 0xffff
@@ -60,11 +59,11 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
 class Servo(_BaseServo):
     """Control the position of a servo.
 
+       :param ~pulseio.PWMOut pwm_out: PWM output object.
        :param int actuation_range: The physical range of the servo corresponding to the signal's
          duty in degrees.
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
-       :param int max_pulse: The maximum pulse length of the servo in microseconds.
-         :param int trim: Slight shift of values to calibrate stopped value in microseconds."""
+       :param int max_pulse: The maximum pulse length of the servo in microseconds."""
     def __init__(self, pwm_out, *, actuation_range=180, min_pulse=1000, max_pulse=2000):
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self._actuation_range = actuation_range
@@ -85,8 +84,7 @@ class ContinuousServo(_BaseServo):
     """Control a continuous rotation servo.
 
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
-       :param int max_pulse: The maximum pulse length of the servo in microseconds.
-       :param int trim: Slight shift of values to calibrate stopped value in microseconds."""
+       :param int max_pulse: The maximum pulse length of the servo in microseconds."""
     @property
     def throttle(self):
         """How much power is being delivered to the motor. Values range from ``-1.0`` (full
