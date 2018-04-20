@@ -30,6 +30,8 @@ pca.frequency = 50
 # servo7 = servo.Servo(pca.channels[7], min_pulse=400, max_pulse=2400)
 # This is an example for the Analog Feedback Servo: https://www.adafruit.com/product/1404
 # servo7 = servo.Servo(pca.channels[7], min_pulse=600, max_pulse=2500)
+# This is an example for the Micro servo - TowerPro SG-92R: https://www.adafruit.com/product/169
+# servo7 = servo.Servo(pca.channels[7], min_pulse=500, max_pulse=2400)
 
 # The pulse range is 1000 - 2000 by default.
 servo7 = servo.Servo(pca.channels[7])
