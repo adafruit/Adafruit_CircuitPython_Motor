@@ -40,7 +40,7 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
        :param ~pulseio.PWMOut pwm_out: PWM output object.
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
        :param int max_pulse: The maximum pulse length of the servo in microseconds."""
-    def __init__(self, pwm_out, *, min_pulse=1000, max_pulse=2000):
+    def __init__(self, pwm_out, *, min_pulse=550, max_pulse=2400):
         self._min_duty = int((min_pulse * pwm_out.frequency) / 1000000 * 0xffff)
         max_duty = (max_pulse * pwm_out.frequency) / 1000000 * 0xffff
         self._duty_range = int(max_duty - self._min_duty)
@@ -64,7 +64,7 @@ class Servo(_BaseServo):
          duty in degrees.
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
        :param int max_pulse: The maximum pulse length of the servo in microseconds."""
-    def __init__(self, pwm_out, *, actuation_range=180, min_pulse=1000, max_pulse=2000):
+    def __init__(self, pwm_out, *, actuation_range=180, min_pulse=550, max_pulse=2400):
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self._actuation_range = actuation_range
         self._pwm = pwm_out

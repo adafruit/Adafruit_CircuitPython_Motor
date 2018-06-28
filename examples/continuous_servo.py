@@ -19,11 +19,11 @@ pca = PCA9685(i2c)
 # pca = PCA9685(i2c, reference_clock_speed=25630710)
 pca.frequency = 50
 
-# The pulse range is 1000 - 2000 by default.
+# The pulse range is 550 - 2400 by default.
 servo7 = servo.ContinuousServo(pca.channels[7])
 # If your servo doesn't stop once the script is finished you may need to tune the
 # reference_clock_speed above or the min_pulse and max_pulse timings below.
-# servo7 = servo.ContinuousServo(pca.channels[7], min_pulse=1000, max_pulse=2000)
+# servo7 = servo.ContinuousServo(pca.channels[7], min_pulse=550, max_pulse=2400)
 
 print("Forwards")
 servo7.throttle = 1
