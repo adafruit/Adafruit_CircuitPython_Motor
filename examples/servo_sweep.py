@@ -33,7 +33,7 @@ pca.frequency = 50
 # This is an example for the Micro servo - TowerPro SG-92R: https://www.adafruit.com/product/169
 # servo7 = servo.Servo(pca.channels[7], min_pulse=500, max_pulse=2400)
 
-# The pulse range is 1000 - 2000 by default.
+# The pulse range is 550 - 2400 by default.
 servo7 = servo.Servo(pca.channels[7])
 
 # We sleep in the loops to give the servo time to move into position.
