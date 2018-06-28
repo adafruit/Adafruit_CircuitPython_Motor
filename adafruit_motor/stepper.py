@@ -73,6 +73,10 @@ class StepperMotor:
     def __init__(self, ain1, ain2, bin1, bin2, *, microsteps=16):
         self._coil = (ain2, bin1, ain1, bin2)
 
+	# set a safe pwm freq for each output
+        for i in range(4):
+            self._coil[i].frequency = 2000
+
         self._current_microstep = 0
         if microsteps < 2:
             raise ValueError("Microsteps must be at least 2")
