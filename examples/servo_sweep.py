@@ -33,7 +33,9 @@ pca.frequency = 50
 # This is an example for the Micro servo - TowerPro SG-92R: https://www.adafruit.com/product/169
 # servo7 = servo.Servo(pca.channels[7], min_pulse=500, max_pulse=2400)
 
-# The pulse range is 550 - 2400 by default.
+# The pulse range is 750 - 2250 by default. This range typically gives 135 degrees of
+# range, but the default is to use 180 degrees. You can specify the expected range if you wish:
+# servo7 = servo.Servo(pca.channels[7], actuation_range=135)
 servo7 = servo.Servo(pca.channels[7])
 
 # We sleep in the loops to give the servo time to move into position.
@@ -43,4 +45,12 @@ for i in range(180):
 for i in range(180):
     servo7.angle = 180 - i
     time.sleep(0.03)
+
+# You can also specify the movement fractionally.
+fraction = 0.0
+while fraction < 1.0:
+    servo7.fraction = fraction
+    fraction += 0.01
+    time.sleep(0.03)
+
 pca.deinit()

@@ -40,19 +40,22 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
        :param ~pulseio.PWMOut pwm_out: PWM output object.
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
        :param int max_pulse: The maximum pulse length of the servo in microseconds."""
-    def __init__(self, pwm_out, *, min_pulse=550, max_pulse=2400):
+    def __init__(self, pwm_out, *, min_pulse=750, max_pulse=2250):
         self._min_duty = int((min_pulse * pwm_out.frequency) / 1000000 * 0xffff)
         max_duty = (max_pulse * pwm_out.frequency) / 1000000 * 0xffff
         self._duty_range = int(max_duty - self._min_duty)
         self._pwm_out = pwm_out
 
     @property
-    def _fraction(self):
+    def fraction(self):
+        """Pulse width expressed as fraction between 0.0 (`min_pulse`) and 1.0 (`max_pulse`).
+        For conventional servos, corresponds to the servo position as a fraction
+        of the actuation range.
+        """
         return (self._pwm_out.duty_cycle - self._min_duty) / self._duty_range
 
-    @_fraction.setter
-    def _fraction(self, value):
-        """The fraction of pulse high."""
+    @fraction.setter
+    def fraction(self, value):
         duty_cycle = self._min_duty + int(value * self._duty_range)
         self._pwm_out.duty_cycle = duty_cycle
 
@@ -60,37 +63,51 @@ class Servo(_BaseServo):
     """Control the position of a servo.
 
        :param ~pulseio.PWMOut pwm_out: PWM output object.
-       :param int actuation_range: The physical range of the servo corresponding to the signal's
-         duty in degrees.
-       :param int min_pulse: The minimum pulse length of the servo in microseconds.
-       :param int max_pulse: The maximum pulse length of the servo in microseconds."""
-    def __init__(self, pwm_out, *, actuation_range=180, min_pulse=550, max_pulse=2400):
+       :param int actuation_range: The physical range of motion of the servo in degrees, \
+           for the given ``min_pulse`` and ``max_pulse`` values.
+       :param int min_pulse: The minimum pulse width of the servo in microseconds.
+       :param int max_pulse: The maximum pulse width of the servo in microseconds.
+
+       The specified pulse width range of a servo has historically been 1000-2000us,
+       for a 90 degree range of motion. But nearly all modern servos have a 170-180
+       degree range, and the pulse widths can go well out of the range to achieve this
+       extended motion. The default values here of ``750`` and ``2250`` typically give
+       135 degrees of motion. You can set ``actuation_range`` to correspond to the
+       actual range of motion you observe with your given ``min_pulse`` and ``max_pulse``
+       values.
+
+       .. warning:: You can extend the pulse width above and below these limits to
+         get a wider range of movement. But if you go too low or too high,
+         the servo mechanism may hit the end stops, buzz, and draw extra current as it stalls.
+         Test carefully to find the safe minimum and maximum.
+"""
+    def __init__(self, pwm_out, *, actuation_range=180, min_pulse=750, max_pulse=2250):
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self._actuation_range = actuation_range
         self._pwm = pwm_out
 
     @property
     def angle(self):
-        """The servo angle in degrees."""
-        return self._actuation_range * self._fraction
+        """The servo angle in degrees. Must be in the range ``0`` to ``actuation_range``."""
+        return self._actuation_range * self.fraction
 
     @angle.setter
     def angle(self, new_angle):
         if new_angle < 0 or new_angle > self._actuation_range:
             raise ValueError("Angle out of range")
-        self._fraction = new_angle / self._actuation_range
+        self.fraction = new_angle / self._actuation_range
 
 class ContinuousServo(_BaseServo):
     """Control a continuous rotation servo.
 
-       :param int min_pulse: The minimum pulse length of the servo in microseconds.
-       :param int max_pulse: The maximum pulse length of the servo in microseconds."""
+       :param int min_pulse: The minimum pulse width of the servo in microseconds.
+       :param int max_pulse: The maximum pulse width of the servo in microseconds."""
     @property
     def throttle(self):
         """How much power is being delivered to the motor. Values range from ``-1.0`` (full
            throttle reverse) to ``1.0`` (full throttle forwards.) ``0`` will stop the motor from
            spinning."""
-        return self._fraction * 2 - 1
+        return self.fraction * 2 - 1
 
     @throttle.setter
     def throttle(self, value):
@@ -98,7 +115,7 @@ class ContinuousServo(_BaseServo):
             raise ValueError("Throttle must be between -1.0 and 1.0")
         if value is None:
             raise ValueError("Continuous servos cannot spin freely")
-        self._fraction = (value + 1) / 2
+        self.fraction = (value + 1) / 2
 
     def __enter__(self):
         return self
