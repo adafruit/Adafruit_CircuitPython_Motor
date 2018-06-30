@@ -44,7 +44,7 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
         self._pwm_out = pwm_out
         self.set_pulse_widths(min_pulse, max_pulse)
 
-    def set_pulse_widths(min_pulse=750, max_pulse=2250):
+    def set_pulse_widths(self, min_pulse=750, max_pulse=2250):
         """Change pulse widths."""
         self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xffff)
         max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xffff
@@ -106,7 +106,7 @@ class Servo(_BaseServo):
 
     @angle.setter
     def angle(self, new_angle):
-        if new_angle < 0 or new_angle > self._actuation_range:
+        if new_angle < 0 or new_angle > self.actuation_range:
             raise ValueError("Angle out of range")
         self.fraction = new_angle / self.actuation_range
 
