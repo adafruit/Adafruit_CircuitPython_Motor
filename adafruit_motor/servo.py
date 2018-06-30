@@ -56,6 +56,8 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
 
     @fraction.setter
     def fraction(self, value):
+        if not 0.0 <= value <= 1.0:
+            raise ValueError("Must be 0.0 to 1.0")
         duty_cycle = self._min_duty + int(value * self._duty_range)
         self._pwm_out.duty_cycle = duty_cycle
 
