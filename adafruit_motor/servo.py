@@ -41,10 +41,14 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
        :param int max_pulse: The maximum pulse length of the servo in microseconds."""
     def __init__(self, pwm_out, *, min_pulse=750, max_pulse=2250):
-        self._min_duty = int((min_pulse * pwm_out.frequency) / 1000000 * 0xffff)
-        max_duty = (max_pulse * pwm_out.frequency) / 1000000 * 0xffff
-        self._duty_range = int(max_duty - self._min_duty)
         self._pwm_out = pwm_out
+        self.set_pulse_widths(min_pulse, max_pulse)
+
+    def set_pulse_widths(min_pulse=750, max_pulse=2250):
+        """Change pulse widths."""
+        self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xffff)
+        max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xffff
+        self._duty_range = int(max_duty - self._min_duty)
 
     @property
     def fraction(self):
@@ -70,6 +74,13 @@ class Servo(_BaseServo):
        :param int min_pulse: The minimum pulse width of the servo in microseconds.
        :param int max_pulse: The maximum pulse width of the servo in microseconds.
 
+       ``actuation_range`` is an exposed property and can be changed at any time:
+
+        .. code-block:: python
+
+          servo = Servo(pwm)
+          servo.actuation_range = 135
+
        The specified pulse width range of a servo has historically been 1000-2000us,
        for a 90 degree range of motion. But nearly all modern servos have a 170-180
        degree range, and the pulse widths can go well out of the range to achieve this
@@ -85,19 +96,19 @@ class Servo(_BaseServo):
 """
     def __init__(self, pwm_out, *, actuation_range=180, min_pulse=750, max_pulse=2250):
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
-        self._actuation_range = actuation_range
+        self.actuation_range = actuation_range
         self._pwm = pwm_out
 
     @property
     def angle(self):
         """The servo angle in degrees. Must be in the range ``0`` to ``actuation_range``."""
-        return self._actuation_range * self.fraction
+        return self.actuation_range * self.fraction
 
     @angle.setter
     def angle(self, new_angle):
         if new_angle < 0 or new_angle > self._actuation_range:
             raise ValueError("Angle out of range")
-        self.fraction = new_angle / self._actuation_range
+        self.fraction = new_angle / self.actuation_range
 
 class ContinuousServo(_BaseServo):
     """Control a continuous rotation servo.
