@@ -44,8 +44,8 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
         self._pwm_out = pwm_out
         self.set_pulse_widths(min_pulse, max_pulse)
 
-    def set_pulse_widths(self, min_pulse=750, max_pulse=2250):
-        """Change pulse widths."""
+    def set_pulse_widths_range(self, min_pulse=750, max_pulse=2250):
+        """Change min and max pulse widths."""
         self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xffff)
         max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xffff
         self._duty_range = int(max_duty - self._min_duty)
