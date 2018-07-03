@@ -74,6 +74,16 @@ todo_include_todos = False
 # If this is True, todo emits a warning for each TODO entries. The default is False.
 todo_emit_warnings = True
 
+# Avoid an `= None` on instance attributes with their own doc strings.
+# Workaround from here: https://github.com/sphinx-doc/sphinx/issues/2044#issuecomment-285888160
+#
+from sphinx.ext.autodoc import (
+    ClassLevelDocumenter, InstanceAttributeDocumenter)
+
+def iad_add_directive_header(self, sig):
+    ClassLevelDocumenter.add_directive_header(self, sig)
+
+InstanceAttributeDocumenter.add_directive_header = iad_add_directive_header
 
 # -- Options for HTML output ----------------------------------------------
 

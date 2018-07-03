@@ -51,27 +51,21 @@ class DCMotor:
     def __init__(self, positive_pwm, negative_pwm):
         self._positive = positive_pwm
         self._negative = negative_pwm
+        self._throttle = None
 
     @property
     def throttle(self):
-        """How much power is being delivered to the motor. Values range from ``-1.0`` (full
-           throttle reverse) to ``1.0`` (full throttle forwards.) ``0`` will stop the motor from
-           spinning and ``None`` will let the motor spin freely."""
-        if self._positive.duty_cycle == 0 and self._negative.duty_cycle == 0:
-            return None
-        if self._positive.duty_cycle == 0xffff and self._negative.duty_cycle == 0xffff:
-            return float(0)
-        if self._positive.duty_cycle > 0 and self._negative.duty_cycle > 0:
-            raise RuntimeError("PWMs in invalid state")
-        value = max(self._positive.duty_cycle, self._negative.duty_cycle) / 0xffff
-        if self._negative.duty_cycle > 0:
-            return -1 * value
-        return value
+        """Motor speed, ranging from -1.0 (full speed reverse) to 1.0 (full speed forward),
+        or ``None``.
+        If ``None``, both PWMs are turned full off. If ``0.0``, both PWMs are turned full on.
+        """
+        return self._throttle
 
     @throttle.setter
     def throttle(self, value):
         if value is not None and (value > 1.0 or value < -1.0):
             raise ValueError("Throttle must be None or between -1.0 and 1.0")
+        self._throttle = value
         if value is None:
             self._positive.duty_cycle = 0
             self._negative.duty_cycle = 0
