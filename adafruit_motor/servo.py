@@ -42,9 +42,9 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
        :param int max_pulse: The maximum pulse length of the servo in microseconds."""
     def __init__(self, pwm_out, *, min_pulse=750, max_pulse=2250):
         self._pwm_out = pwm_out
-        self.set_pulse_widths(min_pulse, max_pulse)
+        self.set_pulse_width_range(min_pulse, max_pulse)
 
-    def set_pulse_widths_range(self, min_pulse=750, max_pulse=2250):
+    def set_pulse_width_range(self, min_pulse=750, max_pulse=2250):
         """Change min and max pulse widths."""
         self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xffff)
         max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xffff
@@ -93,10 +93,11 @@ class Servo(_BaseServo):
          get a wider range of movement. But if you go too low or too high,
          the servo mechanism may hit the end stops, buzz, and draw extra current as it stalls.
          Test carefully to find the safe minimum and maximum.
-"""
+    """
     def __init__(self, pwm_out, *, actuation_range=180, min_pulse=750, max_pulse=2250):
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self.actuation_range = actuation_range
+        """The physical range of motion of the servo in degrees."""
         self._pwm = pwm_out
 
     @property
