@@ -15,6 +15,10 @@ class Coil:
         self._duty_cycle = 0
 
     @property
+    def frequency(self):
+        return 1500
+
+    @property
     def duty_cycle(self):
         return self._duty_cycle
 
