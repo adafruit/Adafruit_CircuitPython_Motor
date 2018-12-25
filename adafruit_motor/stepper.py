@@ -107,6 +107,12 @@ class StepperMotor:
         for i in range(4):
             self._coil[i].duty_cycle = duty_cycles[i]
 
+    def release(self):
+        """Releases all the coils so the motor can free spin, also won't use any power"""
+        # De-energize coils:
+        for i in range(4):
+            self._coil[i].duty_cycle = 0
+
     def onestep(self, *, direction=FORWARD, style=SINGLE):
         """Performs one step of a particular style. The actual rotation amount will vary by style.
            `SINGLE` and `DOUBLE` will normal cause a full step rotation. `INTERLEAVE` will normally
@@ -142,7 +148,7 @@ class StepperMotor:
             if ((style == SINGLE and current_interleave % 2 == 1) or
                     (style == DOUBLE and current_interleave % 2 == 0)):
                 step_size = half_step
-            elif style == SINGLE or style == DOUBLE:
+            elif style in (SINGLE, DOUBLE):
                 step_size = full_step
 
         if direction == FORWARD:
