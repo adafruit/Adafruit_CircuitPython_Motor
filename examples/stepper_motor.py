@@ -8,7 +8,7 @@ import board
 import pulseio
 from adafruit_motor import stepper
 
-AIn1 = pulseio.PWMOut(board.D9,  frequency=1600)
+AIn1 = pulseio.PWMOut(board.D9, frequency=1600)
 AIn2 = pulseio.PWMOut(board.D10, frequency=1600)
 BIn1 = pulseio.PWMOut(board.D11, frequency=1600)
 BIn2 = pulseio.PWMOut(board.D12, frequency=1600)
