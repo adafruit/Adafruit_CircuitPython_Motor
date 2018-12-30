@@ -1,5 +1,5 @@
 # Run a Stepper Motor. Tested on ItsyBitsy M4 Express + DRV8833.
-#   https://www.adafruit.com/product/3800  
+#   https://www.adafruit.com/product/3800
 #   https://www.adafruit.com/product/3297
 
 import time
