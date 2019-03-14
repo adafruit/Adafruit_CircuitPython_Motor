@@ -69,17 +69,14 @@ class StepperMotor:
     :param ~pulseio.PWMOut bin2: `pulseio.PWMOut`-compatible output connected to the driver for
       the fourth coil (unipolar) or second input to second coil (bipolar).
     :param int microsteps: Number of microsteps between full steps. Must be at least 2 and even.
-
-    .. note:: The ``StepperMotor`` class requires PWM frequencies > 1500. Specify
-      ``frequency=1500`` or higher when instantiating the above ``PWMOut`` objects.
     """
     def __init__(self, ain1, ain2, bin1, bin2, *, microsteps=16):
         self._coil = (ain2, bin1, ain1, bin2)
 
-        # reject unsafe (low) pwm freq
+	# set a safe pwm freq for each output
         for i in range(4):
             if self._coil[i].frequency < 1500:
-                raise ValueError("PWMOut: 'frequency' must be at least 1500")
+                self._coil[i].frequency = 2000
 
         self._current_microstep = 0
         if microsteps < 2:

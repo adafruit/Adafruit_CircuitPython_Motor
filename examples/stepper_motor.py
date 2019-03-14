@@ -1,24 +1,39 @@
-# Run a Stepper Motor. Tested on ItsyBitsy M4 Express + DRV8833.
-#   https://www.adafruit.com/product/3800
-#   https://www.adafruit.com/product/3297
+# This example uses an Adafruit Stepper and DC Motor FeatherWing to run a Stepper Motor.
+#   https://www.adafruit.com/product/2927
 
 import time
 
-import board
-import pulseio
+from board import SCL, SDA
+import busio
+
+# Import the PCA9685 module. Available in the bundle and here:
+#   https://github.com/adafruit/Adafruit_CircuitPython_PCA9685
+from adafruit_pca9685 import PCA9685
+
 from adafruit_motor import stepper
 
-AIn1 = pulseio.PWMOut(board.D9, frequency=1600)
-AIn2 = pulseio.PWMOut(board.D10, frequency=1600)
-BIn1 = pulseio.PWMOut(board.D11, frequency=1600)
-BIn2 = pulseio.PWMOut(board.D12, frequency=1600)
+i2c = busio.I2C(SCL, SDA)
 
-stepper_motor = stepper.StepperMotor(AIn1, AIn2, BIn1, BIn2)
+# Create a simple PCA9685 class instance for the Motor FeatherWing's default address.
+pca = PCA9685(i2c, address=0x60)
+pca.frequency = 1600
 
-for i in range(1000):
+# Motor 1 is channels 9 and 10 with 8 held high.
+# Motor 2 is channels 11 and 12 with 13 held high.
+# Motor 3 is channels 3 and 4 with 2 held high.
+# Motor 4 is channels 5 and 6 with 7 held high.
+
+pca.channels[7].duty_cycle = 0xffff
+pca.channels[2].duty_cycle = 0xffff
+stepper_motor = stepper.StepperMotor(pca.channels[4], pca.channels[3], # Motor 3
+                                     pca.channels[5], pca.channels[6]) # Motor 4
+
+for i in range(100):
     stepper_motor.onestep()
     time.sleep(0.01)
 
-for i in range(1000):
+for i in range(100):
     stepper_motor.onestep(direction=stepper.BACKWARD)
     time.sleep(0.01)
+
+pca.deinit()
