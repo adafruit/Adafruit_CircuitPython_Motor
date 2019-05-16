@@ -19,6 +19,6 @@ Ensure your device works with this simple test.
     :caption: examples/motor_pca9685_servo_sweep.py
     :linenos:
 
-.. literalinclude:: ../examples/motor_continuous_servo.py
+.. literalinclude:: ../examples/motor_pca9685_continuous_servo.py
     :caption: examples/motor_pca9685_continuous_servo.py
     :linenos:
