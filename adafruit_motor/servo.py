@@ -54,12 +54,17 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
     def fraction(self):
         """Pulse width expressed as fraction between 0.0 (`min_pulse`) and 1.0 (`max_pulse`).
         For conventional servos, corresponds to the servo position as a fraction
-        of the actuation range.
+        of the actuation range. Is None when servo is diabled (pulsewidth of 0ms).
         """
+        if self._pwm_out.duty_cycle == 0:      # Special case for disabled servos
+            return None
         return (self._pwm_out.duty_cycle - self._min_duty) / self._duty_range
 
     @fraction.setter
     def fraction(self, value):
+        if value is None:
+            self._pwm_out.duty_cycle = 0       # disable the motor
+            return
         if not 0.0 <= value <= 1.0:
             raise ValueError("Must be 0.0 to 1.0")
         duty_cycle = self._min_duty + int(value * self._duty_range)
@@ -102,11 +107,17 @@ class Servo(_BaseServo):
 
     @property
     def angle(self):
-        """The servo angle in degrees. Must be in the range ``0`` to ``actuation_range``."""
+        """The servo angle in degrees. Must be in the range ``0`` to ``actuation_range``.
+        Is None when servo is disabled."""
+        if self.fraction is None:  # special case for disabled servos
+            return None
         return self.actuation_range * self.fraction
 
     @angle.setter
     def angle(self, new_angle):
+        if new_angle is None:      # disable the servo by sending 0 signal
+            self.fraction = None
+            return
         if new_angle < 0 or new_angle > self.actuation_range:
             raise ValueError("Angle out of range")
         self.fraction = new_angle / self.actuation_range
