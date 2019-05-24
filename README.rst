@@ -17,7 +17,7 @@ Introduction
 This helper library provides higher level objects to control motors and servos based on one or more
 PWM outputs.
 
-The PWM inputs can be any object that have a 16-bit ``duty_cycle`` attribute. Its assumed that the
+The PWM outputs can be any object that have a 16-bit ``duty_cycle`` attribute. Its assumed that the
 frequency has already been configured appropriately. (Typically 50hz for servos and 1600hz for
 motors.)
 
