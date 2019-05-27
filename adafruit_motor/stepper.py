@@ -86,7 +86,6 @@ class StepperMotor:
         self._microsteps = microsteps
         self._curve = [int(round(0xffff * math.sin(math.pi / (2 * microsteps) * i)))
                        for i in range(microsteps + 1)]
-        self._update_coils()
 
     def _update_coils(self, *, microstepping=False):
         duty_cycles = [0, 0, 0, 0]
