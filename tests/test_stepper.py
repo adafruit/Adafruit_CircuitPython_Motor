@@ -33,7 +33,7 @@ def test_single_coil():
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
     # Always start with a single step.
     for j in range(4):
-        assert coil[j].duty_cycle == (0xffff if j == 0 else 0)
+        assert coil[j].duty_cycle == 0
     for i in range(1, 7): # Test 6 steps so we wrap around
         motor.onestep()
         for j in range(4):
@@ -45,7 +45,7 @@ def test_double_coil():
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
     # Despite double stepping we always start with a single step.
     for j in range(4):
-        assert coil[j].duty_cycle == (0xffff if j == 0 else 0)
+        assert coil[j].duty_cycle == 0
     for i in range(6): # Test 6 steps so we wrap around
         motor.onestep(style=stepper.DOUBLE)
         for j in range(4):
@@ -57,7 +57,7 @@ def test_interleave_steps():
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
     # We always start with a single step.
     for j in range(4):
-        assert coil[j].duty_cycle == (0xffff if j == 0 else 0)
+        assert coil[j].duty_cycle == 0
     for i in range(15): # Test 15 half steps so we wrap around
         motor.onestep(style=stepper.INTERLEAVE)
         for j in range(4):
@@ -83,7 +83,7 @@ def test_microstep_steps():
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3], microsteps=2)
     # We always start with a single step.
     for j in range(4):
-        assert coil[j].duty_cycle == (0xffff if j == 0 else 0)
+        assert coil[j].duty_cycle == 0
     motor.onestep(style=stepper.MICROSTEP)
     assert coil[0].duty_cycle == 0xb504
     assert coil[1].duty_cycle == 0xb504
@@ -114,7 +114,7 @@ def test_double_to_single():
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
     # We always start with a single step.
     for j in range(4):
-        assert coil[j].duty_cycle == (0xffff if j == 0 else 0)
+        assert coil[j].duty_cycle == 0
 
     motor.onestep(direction=stepper.BACKWARD, style=stepper.DOUBLE)
     assert coil[0].duty_cycle == 0xffff
@@ -146,7 +146,7 @@ def test_microstep_to_single():
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
     # We always start with a single step.
     for j in range(4):
-        assert coil[j].duty_cycle == (0xffff if j == 0 else 0)
+        assert coil[j].duty_cycle == 0
 
     motor.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
     assert coil[0].duty_cycle == 0xfec3
