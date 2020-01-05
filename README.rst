@@ -10,8 +10,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.com/adafruit/Adafruit_CircuitPython_Motor.svg?branch=master
-    :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_Motor
+.. image:: https://github.com/adafruit/Adafruit_CircuitPython_Motor/workflows/Build%20CI/badge.svg
+    :target: https://github.com/adafruit/Adafruit_CircuitPython_Motor/actions/
     :alt: Build Status
 
 This helper library provides higher level objects to control motors and servos based on one or more
