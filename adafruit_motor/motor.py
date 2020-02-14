@@ -86,7 +86,3 @@ class DCMotor:
 
     def __exit__(self, exception_type, exception_value, traceback):
         self.throttle = None
-
-    def deinit(self):
-        """Stop using the motor."""
-        self.throttle = None
