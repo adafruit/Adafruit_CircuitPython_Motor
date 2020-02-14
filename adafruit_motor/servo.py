@@ -147,7 +147,3 @@ class ContinuousServo(_BaseServo):
 
     def __exit__(self, exception_type, exception_value, traceback):
         self.throttle = 0
-
-    def deinit(self):
-        """Stop using the servo."""
-        self.throttle = 0
