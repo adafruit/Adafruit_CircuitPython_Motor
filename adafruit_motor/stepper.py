@@ -57,6 +57,7 @@ MICROSTEP = const(4)
 """Step a fraction of a step by partially activating two neighboring coils. Step size is determined
    by ``microsteps`` constructor argument."""
 
+
 class StepperMotor:
     """A bipolar stepper motor or four coil unipolar motor.
 
@@ -70,10 +71,11 @@ class StepperMotor:
       the fourth coil (unipolar) or second input to second coil (bipolar).
     :param int microsteps: Number of microsteps between full steps. Must be at least 2 and even.
     """
+
     def __init__(self, ain1, ain2, bin1, bin2, *, microsteps=16):
         self._coil = (ain2, bin1, ain1, bin2)
 
-	# set a safe pwm freq for each output
+        # set a safe pwm freq for each output
         for i in range(4):
             if self._coil[i].frequency < 1500:
                 self._coil[i].frequency = 2000
@@ -84,8 +86,10 @@ class StepperMotor:
         if microsteps % 2 == 1:
             raise ValueError("Microsteps must be even")
         self._microsteps = microsteps
-        self._curve = [int(round(0xffff * math.sin(math.pi / (2 * microsteps) * i)))
-                       for i in range(microsteps + 1)]
+        self._curve = [
+            int(round(0xFFFF * math.sin(math.pi / (2 * microsteps) * i)))
+            for i in range(microsteps + 1)
+        ]
         self._update_coils()
 
     def _update_coils(self, *, microstepping=False):
@@ -98,10 +102,12 @@ class StepperMotor:
 
         # This ensures DOUBLE steps use full torque. Without it, we'd use partial torque from the
         # microstepping curve (0xb504).
-        if not microstepping and (duty_cycles[leading_coil] == duty_cycles[trailing_coil] and
-                                  duty_cycles[leading_coil] > 0):
-            duty_cycles[leading_coil] = 0xffff
-            duty_cycles[trailing_coil] = 0xffff
+        if not microstepping and (
+            duty_cycles[leading_coil] == duty_cycles[trailing_coil]
+            and duty_cycles[leading_coil] > 0
+        ):
+            duty_cycles[leading_coil] = 0xFFFF
+            duty_cycles[trailing_coil] = 0xFFFF
 
         # Energize coils as appropriate:
         for i in range(4):
@@ -145,8 +151,9 @@ class StepperMotor:
                 step_size = half_step
 
             current_interleave = self._current_microstep // half_step
-            if ((style == SINGLE and current_interleave % 2 == 1) or
-                    (style == DOUBLE and current_interleave % 2 == 0)):
+            if (style == SINGLE and current_interleave % 2 == 1) or (
+                style == DOUBLE and current_interleave % 2 == 0
+            ):
                 step_size = half_step
             elif style in (SINGLE, DOUBLE):
                 step_size = full_step

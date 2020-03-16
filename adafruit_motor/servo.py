@@ -34,20 +34,21 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
 # We disable the too few public methods check because this is a private base class for the two types
 # of servos.
-class _BaseServo: # pylint: disable-msg=too-few-public-methods
+class _BaseServo:  # pylint: disable-msg=too-few-public-methods
     """Shared base class that handles pulse output based on a value between 0 and 1.0
 
        :param ~pulseio.PWMOut pwm_out: PWM output object.
        :param int min_pulse: The minimum pulse length of the servo in microseconds.
        :param int max_pulse: The maximum pulse length of the servo in microseconds."""
+
     def __init__(self, pwm_out, *, min_pulse=750, max_pulse=2250):
         self._pwm_out = pwm_out
         self.set_pulse_width_range(min_pulse, max_pulse)
 
     def set_pulse_width_range(self, min_pulse=750, max_pulse=2250):
         """Change min and max pulse widths."""
-        self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xffff)
-        max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xffff
+        self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF)
+        max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF
         self._duty_range = int(max_duty - self._min_duty)
 
     @property
@@ -56,19 +57,20 @@ class _BaseServo: # pylint: disable-msg=too-few-public-methods
         For conventional servos, corresponds to the servo position as a fraction
         of the actuation range. Is None when servo is diabled (pulsewidth of 0ms).
         """
-        if self._pwm_out.duty_cycle == 0:      # Special case for disabled servos
+        if self._pwm_out.duty_cycle == 0:  # Special case for disabled servos
             return None
         return (self._pwm_out.duty_cycle - self._min_duty) / self._duty_range
 
     @fraction.setter
     def fraction(self, value):
         if value is None:
-            self._pwm_out.duty_cycle = 0       # disable the motor
+            self._pwm_out.duty_cycle = 0  # disable the motor
             return
         if not 0.0 <= value <= 1.0:
             raise ValueError("Must be 0.0 to 1.0")
         duty_cycle = self._min_duty + int(value * self._duty_range)
         self._pwm_out.duty_cycle = duty_cycle
+
 
 class Servo(_BaseServo):
     """Control the position of a servo.
@@ -99,6 +101,7 @@ class Servo(_BaseServo):
          the servo mechanism may hit the end stops, buzz, and draw extra current as it stalls.
          Test carefully to find the safe minimum and maximum.
     """
+
     def __init__(self, pwm_out, *, actuation_range=180, min_pulse=750, max_pulse=2250):
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self.actuation_range = actuation_range
@@ -115,18 +118,20 @@ class Servo(_BaseServo):
 
     @angle.setter
     def angle(self, new_angle):
-        if new_angle is None:      # disable the servo by sending 0 signal
+        if new_angle is None:  # disable the servo by sending 0 signal
             self.fraction = None
             return
         if new_angle < 0 or new_angle > self.actuation_range:
             raise ValueError("Angle out of range")
         self.fraction = new_angle / self.actuation_range
 
+
 class ContinuousServo(_BaseServo):
     """Control a continuous rotation servo.
 
        :param int min_pulse: The minimum pulse width of the servo in microseconds.
        :param int max_pulse: The maximum pulse width of the servo in microseconds."""
+
     @property
     def throttle(self):
         """How much power is being delivered to the motor. Values range from ``-1.0`` (full
