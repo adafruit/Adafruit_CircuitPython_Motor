@@ -27,7 +27,7 @@ pca.frequency = 100
 # cases. A capacitor can be used to help prevent this. The demo uses motor 4 because it worked ok
 # in testing without a capacitor.
 # See here for more info: https://learn.adafruit.com/adafruit-motor-shield-v2-for-arduino/faq#faq-13
-pca.channels[7].duty_cycle = 0xffff
+pca.channels[7].duty_cycle = 0xFFFF
 motor4 = motor.DCMotor(pca.channels[5], pca.channels[6])
 
 print("Forwards slow")

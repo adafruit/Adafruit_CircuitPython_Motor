@@ -40,6 +40,7 @@ factors already.
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
+
 class DCMotor:
     """DC motor driver. ``positive_pwm`` and ``negative_pwm`` can be swapped if the motor runs in
        the opposite direction from what was expected for "forwards".
@@ -48,6 +49,7 @@ class DCMotor:
          when high and the other is low.
        :param ~pulseio.PWMOut negative_pwm: The motor input that causes the motor to spin backwards
          when high and the other is low."""
+
     def __init__(self, positive_pwm, negative_pwm):
         self._positive = positive_pwm
         self._negative = negative_pwm
@@ -70,10 +72,10 @@ class DCMotor:
             self._positive.duty_cycle = 0
             self._negative.duty_cycle = 0
         elif value == 0:
-            self._positive.duty_cycle = 0xffff
-            self._negative.duty_cycle = 0xffff
+            self._positive.duty_cycle = 0xFFFF
+            self._negative.duty_cycle = 0xFFFF
         else:
-            duty_cycle = int(0xffff * abs(value))
+            duty_cycle = int(0xFFFF * abs(value))
             if value < 0:
                 self._positive.duty_cycle = 0
                 self._negative.duty_cycle = duty_cycle
