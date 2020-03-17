@@ -26,8 +26,8 @@ pca.frequency = 1600
 pca.channels[7].duty_cycle = 0xFFFF
 pca.channels[2].duty_cycle = 0xFFFF
 stepper_motor = stepper.StepperMotor(
-    pca.channels[4], pca.channels[3], pca.channels[5], pca.channels[6]  # Motor 3
-)  # Motor 4
+    pca.channels[4], pca.channels[3], pca.channels[5], pca.channels[6]
+)
 
 for i in range(100):
     stepper_motor.onestep()
