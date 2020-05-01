@@ -85,9 +85,10 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
         if value is None:
             self._pwm_out.duty_cycle = 0 # disable the motor
             return
-        if not self._min_duty <= value <= (self._min_duty + self._duty_range):
+        duty_cycle = int((value * self._pwm_out.frequency) / 1000000 * 0xFFFF)
+        if not self._min_duty <= duty_cycle <= (self._min_duty + self._duty_range):
             raise ValueError("Duty cycle out of range")
-        self._pwm_out.duty_cycle = value
+        self._pwm_out.duty_cycle = duty_cycle
 
 
 class Servo(_BaseServo):
