@@ -76,14 +76,14 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
         """The pulse width sent to the servo in microseconds. Must be in
         the range ``min_pulse`` to ``max_pulse``. Is None when servo is disabled.
         """
-        if self._pwm_out.duty_cycle == 0: # Special case for disabled servos
+        if self._pwm_out.duty_cycle == 0:  # Special case for disabled servos
             return None
         return self._pwm_out.duty_cycle
 
     @pulse_width.setter
     def pulse_width(self, value):
         if value is None:
-            self._pwm_out.duty_cycle = 0 # disable the motor
+            self._pwm_out.duty_cycle = 0  # disable the motor
             return
         duty_cycle = int((value * self._pwm_out.frequency) / 1000000 * 0xFFFF)
         if not self._min_duty <= duty_cycle <= (self._min_duty + self._duty_range):
