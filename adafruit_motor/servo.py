@@ -70,7 +70,7 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
             raise ValueError("Must be 0.0 to 1.0")
         duty_cycle = self._min_duty + int(value * self._duty_range)
         self._pwm_out.duty_cycle = duty_cycle
-        
+
     @property
     def pulse_width(self):
         """The pulse width sent to the servo in microseconds. Must be in
