@@ -187,7 +187,9 @@ class StepperMotor:
             else:
                 coil.duty_cycle = 0
 
-    def onestep(self, *, direction=FORWARD, style=SINGLE): #pylint: disable=too-many-branches
+    def onestep(
+        self, *, direction=FORWARD, style=SINGLE
+    ):  # pylint: disable=too-many-branches
         """Performs one step of a particular style. The actual rotation amount will vary by style.
            `SINGLE` and `DOUBLE` will normal cause a full step rotation. `INTERLEAVE` will normally
            do a half step rotation. `MICROSTEP` will perform the smallest configured step.
