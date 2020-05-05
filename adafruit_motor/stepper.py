@@ -165,8 +165,8 @@ class StepperMotor:
             duty_cycles[leading_coil] = self._curve[microstep]
             duty_cycles[trailing_coil] = self._curve[self._microsteps - microstep]
 
-            # This ensures DOUBLE steps use full torque. Without it, we'd use partial torque from the
-            # microstepping curve (0xb504).
+            # This ensures DOUBLE steps use full torque. Without it, we'd use
+            #  partial torque from the microstepping curve (0xb504).
             if not microstepping and (
                 duty_cycles[leading_coil] == duty_cycles[trailing_coil]
                 and duty_cycles[leading_coil] > 0
@@ -187,7 +187,7 @@ class StepperMotor:
             else:
                 coil.duty_cycle = 0
 
-    def onestep(self, *, direction=FORWARD, style=SINGLE):
+    def onestep(self, *, direction=FORWARD, style=SINGLE): #pylint: disable=too-many-branches
         """Performs one step of a particular style. The actual rotation amount will vary by style.
            `SINGLE` and `DOUBLE` will normal cause a full step rotation. `INTERLEAVE` will normally
            do a half step rotation. `MICROSTEP` will perform the smallest configured step.
@@ -221,12 +221,12 @@ class StepperMotor:
             else:
                 half_step = self._microsteps // 2
                 full_step = self._microsteps
-                # Its possible the previous steps were MICROSTEPS so first align with the interleave
-                # pattern.
+                # Its possible the previous steps were MICROSTEPS so first align
+                #  with the interleave pattern.
                 additional_microsteps = self._current_microstep % half_step
                 if additional_microsteps != 0:
-                    # We set _current_microstep directly because our step size varies depending on the
-                    # direction.
+                    # We set _current_microstep directly because our step size varies
+                    # depending on the direction.
                     if direction == FORWARD:
                         self._current_microstep += half_step - additional_microsteps
                     else:
