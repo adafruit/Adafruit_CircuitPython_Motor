@@ -57,29 +57,12 @@ MICROSTEP = const(4)
 """Step a fraction of a step by partially activating two neighboring coils. Step size is determined
    by ``microsteps`` constructor argument."""
 
-_SINGLE_STEPS = (
-    (0, 1, 0, 0),
-    (0, 0, 1, 0),
-    (1, 0, 0, 0),
-    (0, 0, 0, 1),
-)
+_SINGLE_STEPS = bytes([0b0010, 0b0100, 0b0001, 0b1000])
 
-_DOUBLE_STEPS = (
-    (0, 1, 0, 1),
-    (0, 1, 1, 0),
-    (1, 0, 1, 0),
-    (1, 0, 0, 1),
-)
+_DOUBLE_STEPS = bytes([0b1010, 0b0110, 0b0101, 0b1001])
 
-_INTERLEAVE_STEPS = (
-    (0, 1, 0, 1),
-    (0, 1, 0, 0),
-    (0, 1, 1, 0),
-    (0, 0, 1, 0),
-    (1, 0, 1, 0),
-    (1, 0, 0, 0),
-    (1, 0, 0, 1),
-    (0, 0, 0, 1),
+_INTERLEAVE_STEPS = bytes(
+    [0b1010, 0b0010, 0b0110, 0b0100, 0b0101, 0b0001, 0b1001, 0b1000]
 )
 
 
@@ -148,12 +131,12 @@ class StepperMotor:
             #
             # Get coil activation sequence
             if self._steps is None:
-                steps = (0, 0, 0, 0)
+                steps = 0b0000
             else:
                 steps = self._steps[self._current_microstep % len(self._steps)]
             # Energize coils as appropriate:
             for i, coil in enumerate(self._coil):
-                coil.value = steps[i]
+                coil.value = (steps >> i) & 0x01
         else:
             #
             # PWM Pins
