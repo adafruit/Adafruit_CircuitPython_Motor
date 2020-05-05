@@ -85,8 +85,8 @@ _INTERLEAVE_STEPS = (
 
 class StepperMotor:
     """A bipolar stepper motor or four coil unipolar motor. The use of microstepping requires
-    pins that can output PWM. For non-microstepping, set `microsteps` to `None` and use either
-    PWM or digital out pins.
+    pins that can output PWM. For non-microstepping, can set microsteps to None and use
+    digital out pins.
 
     **PWM**
 
