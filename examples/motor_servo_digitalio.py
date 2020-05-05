@@ -10,17 +10,16 @@ DELAY = 0.01
 STEPS = 200
 
 coils = (
-    digitalio.DigitalInOut(board.D19), # A1
-    digitalio.DigitalInOut(board.D26), # A2
-    digitalio.DigitalInOut(board.D20), # B1
-    digitalio.DigitalInOut(board.D21), # B2
+    digitalio.DigitalInOut(board.D19),  # A1
+    digitalio.DigitalInOut(board.D26),  # A2
+    digitalio.DigitalInOut(board.D20),  # B1
+    digitalio.DigitalInOut(board.D21),  # B2
 )
 
 for coil in coils:
     coil.direction = digitalio.Direction.OUTPUT
 
-motor = stepper.StepperMotor(coils[0], coils[1], coils[2], coils[3],
-                        microsteps=None)
+motor = stepper.StepperMotor(coils[0], coils[1], coils[2], coils[3], microsteps=None)
 
 for step in range(STEPS):
     motor.onestep()

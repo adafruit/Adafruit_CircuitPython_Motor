@@ -82,6 +82,7 @@ _INTERLEAVE_STEPS = (
     (0, 0, 0, 1),
 )
 
+
 class StepperMotor:
     """A bipolar stepper motor or four coil unipolar motor. The use of microstepping requires
     pins that can output PWM. For non-microstepping, set `microsteps` to `None` and use either
@@ -123,7 +124,7 @@ class StepperMotor:
             #
             # PWM Pins
             #
-            #set a safe pwm freq for each output
+            # set a safe pwm freq for each output
             self._coil = (ain2, bin1, ain1, bin2)
             for i in range(4):
                 if self._coil[i].frequency < 1500:
