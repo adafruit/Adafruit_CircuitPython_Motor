@@ -1,0 +1,25 @@
+name: Run Tests
+
+on: [pull_request, push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Versions
+      run: |
+        python3 --version
+    - name: Checkout Current Repo
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - name: Install pytest
+      run: pip install pytest
+    - name: Install locally
+      run: pip install .
+    - name: Run tests
+      run: pytest
