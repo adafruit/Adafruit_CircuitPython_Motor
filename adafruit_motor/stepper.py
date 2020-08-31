@@ -73,13 +73,13 @@ class StepperMotor:
 
     **PWM**
 
-    :param ~pulseio.PWMOut ain1: ``pulseio.PWMOut``-compatible output connected to the driver for
+    :param ~pwmio.PWMOut ain1: `pwmio.PWMOut`-compatible output connected to the driver for
       the first coil (unipolar) or first input to first coil (bipolar).
-    :param ~pulseio.PWMOut ain2: ``pulseio.PWMOut``-compatible output connected to the driver for
+    :param ~pwmio.PWMOut ain2: `pwmio.PWMOut`-compatible output connected to the driver for
       the third coil (unipolar) or second input to first coil (bipolar).
-    :param ~pulseio.PWMOut bin1: ``pulseio.PWMOut``-compatible output connected to the driver for
+    :param ~pwmio.PWMOut bin1: `pwmio.PWMOut`-compatible output connected to the driver for
       the second coil (unipolar) or second input to second coil (bipolar).
-    :param ~pulseio.PWMOut bin2: ``pulseio.PWMOut``-compatible output connected to the driver for
+    :param ~pwmio.PWMOut bin2: `pwmio.PWMOut`-compatible output connected to the driver for
       the fourth coil (unipolar) or second input to second coil (bipolar).
     :param int microsteps: Number of microsteps between full steps. Must be at least 2 and even.
 
