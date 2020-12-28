@@ -22,3 +22,7 @@ Ensure your device works with this simple test.
 .. literalinclude:: ../examples/motor_pca9685_continuous_servo.py
     :caption: examples/motor_pca9685_continuous_servo.py
     :linenos:
+
+.. literalinclude:: ../examples/motor_pca9685_servo_trim.py
+    :caption: examples/motor_pca9685_servo_trim.py
+    :linenos:

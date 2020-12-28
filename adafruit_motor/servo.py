@@ -29,6 +29,9 @@ loops enable pulse width modulated control to determine position or rotational s
 * Author(s): Scott Shawcroft
 """
 
+from typing import Union
+
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
@@ -105,25 +108,112 @@ class Servo(_BaseServo):
     def __init__(self, pwm_out, *, actuation_range=180, min_pulse=750, max_pulse=2250):
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self.actuation_range = actuation_range
+        self._trim = None
         """The physical range of motion of the servo in degrees."""
         self._pwm = pwm_out
 
     @property
+    def trim(self) -> Union[None, float]:
+        """
+        Gets/Sets the "trim" applied to a servo.
+
+        The trim is a term used to center a servo. It is an adjustment to define where center is.
+        By nature when setting a trim the actuation min and max values will change.
+
+        Take an actuation range of 180 with no trim set.
+        An angle of 0.0 would be the maxikum movement in a direction.
+        An angle of 180.0 would be maximum movement in the oppsite direction.
+
+        Using the same actuation range of 180 and setting the trim to 50.0
+        You end up with 0.0 angle being in the middle of the actuation range (90.0)
+        An angle of -90.0 would be setting the actuatuator to the bottom of the actuation range (0.0)
+        An angle of +90.0 would set the servo to the top of the actuation range (180.0)
+
+        This is nice because it provides the user with a centering adjustment and also makes it easier to
+        handle using a servo in a steering or direction type of design. Using these types of angles also
+        makes it easier to plot a course using the Right Handed Cartesian Coordinate System which would
+        have a similiar mapping system to what would be used in directional controls using servos
+
+
+        Right Handed Cartesian Coordinate System
+
+        .. code-block::
+
+                      +y
+                      |
+                      |
+            -x -------|------- +x
+                      |
+                      |
+                     -y
+
+
+            +y = forward = +servo angle
+            -y = backwards = -servo angle
+            +x = right turn = +servo angle
+            -x = left turn = -servo angle
+
+        """
+        return self._trim
+
+    @trim.setter
+    def trim(self, value: Union[None, float]):
+        if value is None:
+            self._trim = value
+        else:
+            self._trim = float(value)
+
+    @staticmethod
+    def _remap(value, new_min, new_max, old_min, old_max):
+        old_range = old_max - old_min
+        new_range = new_max - new_min
+        return (((value - old_min) * new_range) / old_range) + new_min
+
+    @property
     def angle(self):
-        """The servo angle in degrees. Must be in the range ``0`` to ``actuation_range``.
-        Is None when servo is disabled."""
+        """
+        The servo angle in degrees.
+
+        If the trim is ``None`` the angle must be in the range ``0`` to ``actuation_range``.
+        Otherwise the range is ``(actuation_range * (trim / 100)) - actuation_range`` to
+        `` actuation_range - (actuation_range * (trim / 100)) ``
+
+        Is None when servo is disabled.
+        """
         if self.fraction is None:  # special case for disabled servos
             return None
-        return self.actuation_range * self.fraction
+
+        if self._trim is None:
+            return self.actuation_range * self.fraction
+        else:
+            value = self.actuation_range * self.fraction
+
+            middle = self.actuation_range * (self.trim / 100.0)
+            bottom = middle - self.actuation_range
+            top = self.actuation_range + bottom
+
+            return self._remap(value, 0, self.actuation_range, bottom, top)
 
     @angle.setter
     def angle(self, new_angle):
         if new_angle is None:  # disable the servo by sending 0 signal
             self.fraction = None
             return
-        if new_angle < 0 or new_angle > self.actuation_range:
-            raise ValueError("Angle out of range")
-        self.fraction = new_angle / self.actuation_range
+
+        if self._trim is None:
+            if not 0 <= new_angle <= self.actuation_range:
+                raise ValueError("Angle out of range")
+            self.fraction = new_angle / self.actuation_range
+
+        else:
+            middle = self.actuation_range * (self.trim / 100.0)
+            bottom = middle - self.actuation_range
+            top = self.actuation_range + bottom
+
+            if not bottom <= new_angle <= top:
+                raise ValueError("Angle out of range")
+
+            self.fraction = self._remap(new_angle, bottom, top, 0, 1.0)
 
 
 class ContinuousServo(_BaseServo):
