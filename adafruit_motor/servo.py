@@ -175,8 +175,9 @@ class Servo(_BaseServo):
         The servo angle in degrees.
 
         If the trim is ``None`` the angle must be in the range ``0`` to ``actuation_range``.
-        Otherwise the range is ``(actuation_range * (trim / 100)) - actuation_range`` to
-        `` actuation_range - (actuation_range * (trim / 100)) ``
+        Otherwise the range is
+        ``(actuation_range - (actuation_range * (trim / 100))) - actuation_range`` to
+        ``actuation_range - (actuation_range * (trim / 100))``
 
         Is None when servo is disabled.
         """
@@ -186,13 +187,17 @@ class Servo(_BaseServo):
         if self._trim is None:
             return self.actuation_range * self.fraction
         else:
-            value = self.actuation_range * self.fraction
+            angle_middle = self.actuation_range * (self._trim / 100.0)
+            angle_top = self.actuation_range - angle_middle
+            angle_bottom = angle_top - self.actuation_range
 
-            middle = self.actuation_range * (self.trim / 100.0)
-            bottom = middle - self.actuation_range
-            top = self.actuation_range + bottom
+            fraction_middle = 1.0 * (self._trim / 100.0)
+            fraction_top = 1.0 - fraction_middle
+            fraction_bottom = fraction_top - 1.0
 
-            return self._remap(value, 0, self.actuation_range, bottom, top)
+            return self._remap(
+                self.fraction, angle_bottom, angle_top, fraction_bottom, fraction_top
+            )
 
     @angle.setter
     def angle(self, new_angle):
@@ -206,14 +211,59 @@ class Servo(_BaseServo):
             self.fraction = new_angle / self.actuation_range
 
         else:
-            middle = self.actuation_range * (self.trim / 100.0)
-            bottom = middle - self.actuation_range
-            top = self.actuation_range + bottom
+            angle_middle = self.actuation_range * (self._trim / 100.0)
+            angle_top = self.actuation_range - angle_middle
+            angle_bottom = angle_top - self.actuation_range
 
-            if not bottom <= new_angle <= top:
+            fraction_middle = 1.0 * (self._trim / 100.0)
+            fraction_top = 1.0 - fraction_middle
+            fraction_bottom = fraction_top - 1.0
+
+            if not angle_bottom <= new_angle <= angle_top:
                 raise ValueError("Angle out of range")
 
-            self.fraction = self._remap(new_angle, bottom, top, 0, 1.0)
+            self.fraction = self._remap(
+                new_angle, fraction_bottom, fraction_top, angle_bottom, angle_top
+            )
+
+    @property
+    def fraction(self) -> Union[float, None]:
+        """
+        Pulse width expressed as decimal fraction
+
+        If no trim has been set the value will be between 0.0 (`min_pulse`) and 1.0 (`max_pulse`).
+        If there is a trim set then the value will be between
+        ``(1.0 - (1.0 * (trim / 100))) - 1.0`` (`min_pulse`) and
+        ``1.0 - (1.0 * (trim / 100))`` (`max_pulse`)
+
+        For conventional servos, corresponds to the servo position as a fraction
+        of the actuation range. Is None when servo is diabled (pulsewidth of 0ms).
+        """
+        fraction = _BaseServo.fraction.fget(self)
+
+        if self._trim is None:
+            return fraction
+
+        else:
+            fraction_middle = 1.0 * (self._trim / 100.0)
+            fraction_top = 1.0 - fraction_middle
+            fraction_bottom = fraction_top - 1.0
+
+            return self._remap(fraction, fraction_bottom, fraction_top, 0.0, 1.0)
+
+    @fraction.setter
+    def fraction(self, value: Union[float, None]):
+        if value is not None and self._trim is not None:
+            fraction_middle = 1.0 * (self._trim / 100.0)
+            fraction_top = 1.0 - fraction_middle
+            fraction_bottom = fraction_top - 1.0
+
+            if not fraction_bottom <= value <= fraction_top:
+                raise ValueError('Value out of range')
+
+            value = self._remap(value, fraction_bottom, fraction_top, 0.0, 1.0)
+
+        _BaseServo.fraction.fset(self, value)
 
 
 class ContinuousServo(_BaseServo):
