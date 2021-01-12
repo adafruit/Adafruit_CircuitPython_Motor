@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 # Use this example for digital pin control of an H-bridge driver
 # like a DRV8833, TB6612 or L298N.
 
