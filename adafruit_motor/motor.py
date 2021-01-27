@@ -28,9 +28,9 @@ class DCMotor:
     """DC motor driver. ``positive_pwm`` and ``negative_pwm`` can be swapped if the motor runs in
     the opposite direction from what was expected for "forwards".
 
-    :param ~pulseio.PWMOut positive_pwm: The motor input that causes the motor to spin forwards
+    :param ~pwmio.PWMOut positive_pwm: The motor input that causes the motor to spin forwards
       when high and the other is low.
-    :param ~pulseio.PWMOut negative_pwm: The motor input that causes the motor to spin backwards
+    :param ~pwmio.PWMOut negative_pwm: The motor input that causes the motor to spin backwards
       when high and the other is low."""
 
     def __init__(self, positive_pwm, negative_pwm):
