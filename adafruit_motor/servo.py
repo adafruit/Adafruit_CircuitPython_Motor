@@ -20,7 +20,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 class _BaseServo:  # pylint: disable-msg=too-few-public-methods
     """Shared base class that handles pulse output based on a value between 0 and 1.0
 
-    :param ~pulseio.PWMOut pwm_out: PWM output object.
+    :param ~pwmio.PWMOut pwm_out: PWM output object.
     :param int min_pulse: The minimum pulse length of the servo in microseconds.
     :param int max_pulse: The maximum pulse length of the servo in microseconds."""
 
@@ -58,7 +58,7 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
 class Servo(_BaseServo):
     """Control the position of a servo.
 
-       :param ~pulseio.PWMOut pwm_out: PWM output object.
+       :param ~pwmio.PWMOut pwm_out: PWM output object.
        :param int actuation_range: The physical range of motion of the servo in degrees, \
            for the given ``min_pulse`` and ``max_pulse`` values.
        :param int min_pulse: The minimum pulse width of the servo in microseconds.
