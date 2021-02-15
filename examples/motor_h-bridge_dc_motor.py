@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 # This example uses an L9110 H-bridge driver to run a DC Motor using two PWM pins.
 #  https://www.adafruit.com/product/4489
 
