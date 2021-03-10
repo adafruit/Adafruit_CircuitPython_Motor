@@ -28,6 +28,7 @@ from micropython import const
 FAST_DECAY = const(0)  # Recirculation current fast decay mode (coasting)
 SLOW_DECAY = const(1)  # Recirculation current slow decay mode (braking)
 
+
 class DCMotor:
     """DC motor driver. ``positive_pwm`` and ``negative_pwm`` can be swapped if the motor runs in
     the opposite direction from what was expected for "forwards".
@@ -75,11 +76,11 @@ class DCMotor:
             duty_cycle = int(0xFFFF * abs(value))
             if self._decay_mode == SLOW_DECAY:  # Slow Decay (Braking) Mode
                 if value < 0:
-                    self._positive.duty_cycle = 0xffff - duty_cycle
-                    self._negative.duty_cycle = 0xffff
+                    self._positive.duty_cycle = 0xFFFF - duty_cycle
+                    self._negative.duty_cycle = 0xFFFF
                 else:
-                    self._positive.duty_cycle = 0xffff
-                    self._negative.duty_cycle = 0xffff - duty_cycle
+                    self._positive.duty_cycle = 0xFFFF
+                    self._negative.duty_cycle = 0xFFFF - duty_cycle
             else:  # Default Fast Decay (Coasting) Mode
                 if value < 0:
                     self._positive.duty_cycle = 0
@@ -100,7 +101,9 @@ class DCMotor:
         if mode in (FAST_DECAY, SLOW_DECAY):
             self._decay_mode = mode
         else:
-            raise ValueError("Decay mode value must be either motor.FAST_DECAY or motor.SLOW_DECAY")
+            raise ValueError(
+                "Decay mode value must be either motor.FAST_DECAY or motor.SLOW_DECAY"
+            )
 
     def __enter__(self):
         return self
