@@ -32,7 +32,9 @@ pca.frequency = 100
 # See here for more info: https://learn.adafruit.com/adafruit-motor-shield-v2-for-arduino/faq#faq-13
 pca.channels[7].duty_cycle = 0xFFFF
 motor4 = motor.DCMotor(pca.channels[5], pca.channels[6])
-motor4.decay_mode = motor.SLOW_DECAY  # Set motor to active braking mode to improve performance
+motor4.decay_mode = (
+    motor.SLOW_DECAY
+)  # Set motor to active braking mode to improve performance
 
 print("Forwards slow")
 motor4.throttle = 0.5
