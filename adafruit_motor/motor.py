@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2017 Scott Shawcroft  for Adafruit Industries
+# SPDX-FileCopyrightText: 2021 Scott Shawcroft for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
 
@@ -38,9 +38,9 @@ class DCMotor:
     threshold, speed-to-throttle linearity, and PWM frequency sensitivity.
 
     Decay mode settings only effect the operational performance of controller chips such
-    as the DRV8833, DRV8871, and TB6612. Although either decay mode setting is compatible
-    with discrete h-bridge controller circuitry such as the L9110H and L293D, operational
-    performance will not be altered.
+    as the DRV8833, DRV8871, and TB6612. Either decay mode setting is compatible
+    with discrete h-bridge controller circuitry such as the L9110H and L293D; operational
+    performance is not altered.
 
     :param ~pwmio.PWMOut positive_pwm: The motor input that causes the motor to spin forwards
       when high and the other is low.
