@@ -35,10 +35,12 @@ class Coil:
 
     @property
     def frequency(self):
+        """Default frequency setting"""
         return 1500
 
     @property
     def duty_cycle(self):
+        """16-bit duty cycle value"""
         return self._duty_cycle
 
     @duty_cycle.setter
@@ -48,6 +50,7 @@ class Coil:
 
 
 def test_single_coil():
+    """Tests single coil"""
     coil = (Coil(), Coil(), Coil(), Coil())
     # We undo the coil order so our tests make more sense.
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
@@ -61,6 +64,7 @@ def test_single_coil():
 
 
 def test_double_coil():
+    """Tests double coil"""
     coil = (Coil(), Coil(), Coil(), Coil())
     # We undo the coil order so our tests make more sense.
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
@@ -76,6 +80,7 @@ def test_double_coil():
 
 
 def test_interleave_steps():
+    """Tests interleave steps"""
     coil = (Coil(), Coil(), Coil(), Coil())
     # We undo the coil order so our tests make more sense.
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
@@ -103,6 +108,7 @@ def test_interleave_steps():
 
 
 def test_microstep_steps():
+    """Tests microsteps"""
     coil = (Coil(), Coil(), Coil(), Coil())
     # We undo the coil order so our tests make more sense.
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3], microsteps=2)
@@ -135,6 +141,7 @@ def test_microstep_steps():
 
 
 def test_double_to_single():
+    """Tests double to single movement"""
     coil = (Coil(), Coil(), Coil(), Coil())
     # We undo the coil order so our tests make more sense.
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
@@ -168,6 +175,7 @@ def test_double_to_single():
 
 
 def test_microstep_to_single():
+    """Tests microsteps to single movement"""
     coil = (Coil(), Coil(), Coil(), Coil())
     # We undo the coil order so our tests make more sense.
     motor = stepper.StepperMotor(coil[2], coil[0], coil[1], coil[3])
