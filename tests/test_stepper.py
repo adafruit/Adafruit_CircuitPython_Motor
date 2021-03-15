@@ -26,7 +26,8 @@ sys.modules["micropython"] = micropython
 
 from adafruit_motor import stepper  # pylint: disable-msg=wrong-import-position
 
-#pylint: disable=consider-using-in
+# pylint: disable=consider-using-in
+
 
 class Coil:
     """Class Coil"""
