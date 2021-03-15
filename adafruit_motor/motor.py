@@ -20,7 +20,7 @@ factors already.
 * Author(s): Scott Shawcroft
 """
 
-__version__ = "3.2.7"
+__version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
 from micropython import const
