@@ -2,6 +2,18 @@
 #
 # SPDX-License-Identifier: Unlicense
 
+"""
+`test_stepper`
+====================================================
+
+Tests stepper functionality.
+
+* Author(s): ladyada
+"""
+
+__version__ = "1.0.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
+
 import os
 import sys
 from unittest.mock import MagicMock
@@ -16,6 +28,8 @@ from adafruit_motor import stepper  # pylint: disable-msg=wrong-import-position
 
 
 class Coil:
+    """Class Coil"""
+
     def __init__(self):
         self._duty_cycle = 0
 
