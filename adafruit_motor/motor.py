@@ -23,10 +23,11 @@ factors already.
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
-from micropython import const
+FAST_DECAY = 0
+"""Recirculation current fast decay mode (coasting)"""
 
-FAST_DECAY = const(0)  # Recirculation current fast decay mode (coasting)
-SLOW_DECAY = const(1)  # Recirculation current slow decay mode (braking)
+SLOW_DECAY = 1
+"""Recirculation current slow decay mode (braking)"""
 
 
 class DCMotor:
