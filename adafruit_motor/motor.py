@@ -22,6 +22,7 @@ factors already.
 
 try:
     from typing import Optional, Type
+    from types import TracebackType
     from pwmio import PWMOut
 except ImportError:
     pass
@@ -115,5 +116,5 @@ class DCMotor:
     def __enter__(self):
         return self
 
-    def __exit__(self, exception_type: Optional[Type[type]], exception_value: Optional[BaseException], traceback): # TODO: Add traceback typing
+    def __exit__(self, exception_type: Optional[Type[type]], exception_value: Optional[BaseException], traceback: Optional[TracebackType]):
         self.throttle = None
