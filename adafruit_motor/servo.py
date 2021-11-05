@@ -12,6 +12,13 @@ loops enable pulse width modulated control to determine position or rotational s
 * Author(s): Scott Shawcroft
 """
 
+try:
+    from typing import Optional
+    from pwmio import PWMOut
+except ImportError:
+    pass
+
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
@@ -24,11 +31,11 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
     :param int min_pulse: The minimum pulse length of the servo in microseconds.
     :param int max_pulse: The maximum pulse length of the servo in microseconds."""
 
-    def __init__(self, pwm_out, *, min_pulse=750, max_pulse=2250):
+    def __init__(self, pwm_out: PWMOut, *, min_pulse: int = 750, max_pulse: int = 2250):
         self._pwm_out = pwm_out
         self.set_pulse_width_range(min_pulse, max_pulse)
 
-    def set_pulse_width_range(self, min_pulse=750, max_pulse=2250):
+    def set_pulse_width_range(self, min_pulse: int = 750, max_pulse: int = 2250):
         """Change min and max pulse widths."""
         self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF)
         max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF
@@ -45,7 +52,7 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
         return (self._pwm_out.duty_cycle - self._min_duty) / self._duty_range
 
     @fraction.setter
-    def fraction(self, value):
+    def fraction(self, value: Optional[float]):
         if value is None:
             self._pwm_out.duty_cycle = 0  # disable the motor
             return
@@ -85,7 +92,7 @@ class Servo(_BaseServo):
          Test carefully to find the safe minimum and maximum.
     """
 
-    def __init__(self, pwm_out, *, actuation_range=180, min_pulse=750, max_pulse=2250):
+    def __init__(self, pwm_out: PWMOut, *, actuation_range: int = 180, min_pulse: int = 750, max_pulse: int = 2250):
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self.actuation_range = actuation_range
         """The physical range of motion of the servo in degrees."""
@@ -100,7 +107,7 @@ class Servo(_BaseServo):
         return self.actuation_range * self.fraction
 
     @angle.setter
-    def angle(self, new_angle):
+    def angle(self, new_angle: Optional[int]):
         if new_angle is None:  # disable the servo by sending 0 signal
             self.fraction = None
             return
@@ -123,7 +130,7 @@ class ContinuousServo(_BaseServo):
         return self.fraction * 2 - 1
 
     @throttle.setter
-    def throttle(self, value):
+    def throttle(self, value: float):
         if value > 1.0 or value < -1.0:
             raise ValueError("Throttle must be between -1.0 and 1.0")
         if value is None:

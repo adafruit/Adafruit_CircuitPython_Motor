@@ -18,6 +18,13 @@ import math
 
 from micropython import const
 
+try:
+    from typing import Union, Optional
+    from pwmio import PWMOut
+    from digitalio import DigitalInOut
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
@@ -79,7 +86,7 @@ class StepperMotor:
     :param microsteps: set to `None`
     """
 
-    def __init__(self, ain1, ain2, bin1, bin2, *, microsteps=16):
+    def __init__(self, ain1: Union[PWMOut, DigitalInOut], ain2: Union[PWMOut, DigitalInOut], bin1: Union[PWMOut, DigitalInOut], bin2: Union[PWMOut, DigitalInOut], *, microsteps: Optional[int] = 16):
         if microsteps is None:
             #
             # Digital IO Pins
@@ -107,7 +114,7 @@ class StepperMotor:
         self._microsteps = microsteps
         self._update_coils()
 
-    def _update_coils(self, *, microstepping=False):
+    def _update_coils(self, *, microstepping: bool = False):
         if self._microsteps is None:
             #
             # Digital IO Pins
@@ -154,7 +161,7 @@ class StepperMotor:
                 coil.duty_cycle = 0
 
     def onestep(
-        self, *, direction=FORWARD, style=SINGLE
+        self, *, direction: int = FORWARD, style: int = SINGLE
     ):  # pylint: disable=too-many-branches
         """Performs one step of a particular style. The actual rotation amount will vary by style.
         `SINGLE` and `DOUBLE` will normal cause a full step rotation. `INTERLEAVE` will normally

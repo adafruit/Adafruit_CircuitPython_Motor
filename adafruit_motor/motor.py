@@ -20,6 +20,12 @@ factors already.
 * Author(s): Scott Shawcroft
 """
 
+try:
+    from typing import Optional, Type
+    from pwmio import PWMOut
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
@@ -48,7 +54,7 @@ class DCMotor:
     :param ~pwmio.PWMOut negative_pwm: The motor input that causes the motor to spin backwards
       when high and the other is low."""
 
-    def __init__(self, positive_pwm, negative_pwm):
+    def __init__(self, positive_pwm: PWMOut, negative_pwm: PWMOut):
         self._positive = positive_pwm
         self._negative = negative_pwm
         self._throttle = None
@@ -63,7 +69,7 @@ class DCMotor:
         return self._throttle
 
     @throttle.setter
-    def throttle(self, value):
+    def throttle(self, value: Optional[float]):
         if value is not None and (value > 1.0 or value < -1.0):
             raise ValueError("Throttle must be None or between -1.0 and +1.0")
         self._throttle = value
@@ -98,7 +104,7 @@ class DCMotor:
         return self._decay_mode
 
     @decay_mode.setter
-    def decay_mode(self, mode=FAST_DECAY):
+    def decay_mode(self, mode: int = FAST_DECAY):
         if mode in (FAST_DECAY, SLOW_DECAY):
             self._decay_mode = mode
         else:
@@ -109,5 +115,5 @@ class DCMotor:
     def __enter__(self):
         return self
 
-    def __exit__(self, exception_type, exception_value, traceback):
+    def __exit__(self, exception_type: Optional[Type[type]], exception_value: Optional[BaseException], traceback): # TODO: Add traceback typing
         self.throttle = None
