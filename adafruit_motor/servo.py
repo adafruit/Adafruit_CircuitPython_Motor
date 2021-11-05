@@ -13,7 +13,8 @@ loops enable pulse width modulated control to determine position or rotational s
 """
 
 try:
-    from typing import Optional
+    from typing import Optional, Type
+    from types import TracebackType
     from pwmio import PWMOut
 except ImportError:
     pass
@@ -140,5 +141,5 @@ class ContinuousServo(_BaseServo):
     def __enter__(self):
         return self
 
-    def __exit__(self, exception_type, exception_value, traceback):
+    def __exit__(self, exception_type: Optional[Type[type]], exception_value: Optional[BaseException], traceback: Optional[TracebackType]):
         self.throttle = 0
