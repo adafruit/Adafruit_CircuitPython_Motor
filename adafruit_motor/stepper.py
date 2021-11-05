@@ -86,7 +86,15 @@ class StepperMotor:
     :param microsteps: set to `None`
     """
 
-    def __init__(self, ain1: Union[PWMOut, DigitalInOut], ain2: Union[PWMOut, DigitalInOut], bin1: Union[PWMOut, DigitalInOut], bin2: Union[PWMOut, DigitalInOut], *, microsteps: Optional[int] = 16):
+    def __init__(
+        self,
+        ain1: Union[PWMOut, DigitalInOut],
+        ain2: Union[PWMOut, DigitalInOut],
+        bin1: Union[PWMOut, DigitalInOut],
+        bin2: Union[PWMOut, DigitalInOut],
+        *,
+        microsteps: Optional[int] = 16
+    ):
         if microsteps is None:
             #
             # Digital IO Pins
