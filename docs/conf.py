@@ -43,6 +43,9 @@ project = "Adafruit motor Library"
 copyright = "2017 Scott Shawcroft"
 author = "Scott Shawcroft"
 
+# Ignore imports of these modules, which sphinx will not know about.
+autodoc_mock_imports = ["pwmio"]
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
