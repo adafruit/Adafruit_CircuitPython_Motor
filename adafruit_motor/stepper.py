@@ -94,7 +94,7 @@ class StepperMotor:
         bin2: Union[PWMOut, DigitalInOut],
         *,
         microsteps: Optional[int] = 16
-    ):
+    ) -> None:
         if microsteps is None:
             #
             # Digital IO Pins
@@ -122,7 +122,7 @@ class StepperMotor:
         self._microsteps = microsteps
         self._update_coils()
 
-    def _update_coils(self, *, microstepping: bool = False):
+    def _update_coils(self, *, microstepping: bool = False) -> None:
         if self._microsteps is None:
             #
             # Digital IO Pins
@@ -159,7 +159,7 @@ class StepperMotor:
             for i in range(4):
                 self._coil[i].duty_cycle = duty_cycles[i]
 
-    def release(self):
+    def release(self) -> None:
         """Releases all the coils so the motor can free spin, also won't use any power"""
         # De-energize coils:
         for coil in self._coil:
@@ -168,9 +168,9 @@ class StepperMotor:
             else:
                 coil.duty_cycle = 0
 
-    def onestep(
+    def onestep(  # pylint: disable=too-many-branches
         self, *, direction: int = FORWARD, style: int = SINGLE
-    ):  # pylint: disable=too-many-branches
+    ) -> None:
         """Performs one step of a particular style. The actual rotation amount will vary by style.
         `SINGLE` and `DOUBLE` will normal cause a full step rotation. `INTERLEAVE` will normally
         do a half step rotation. `MICROSTEP` will perform the smallest configured step.
