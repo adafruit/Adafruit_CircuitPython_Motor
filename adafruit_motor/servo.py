@@ -12,6 +12,14 @@ loops enable pulse width modulated control to determine position or rotational s
 * Author(s): Scott Shawcroft
 """
 
+try:
+    from typing import Optional, Type
+    from types import TracebackType
+    from pwmio import PWMOut
+except ImportError:
+    pass
+
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
@@ -24,18 +32,22 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
     :param int min_pulse: The minimum pulse length of the servo in microseconds.
     :param int max_pulse: The maximum pulse length of the servo in microseconds."""
 
-    def __init__(self, pwm_out, *, min_pulse=750, max_pulse=2250):
+    def __init__(
+        self, pwm_out: PWMOut, *, min_pulse: int = 750, max_pulse: int = 2250
+    ) -> None:
         self._pwm_out = pwm_out
         self.set_pulse_width_range(min_pulse, max_pulse)
 
-    def set_pulse_width_range(self, min_pulse=750, max_pulse=2250):
+    def set_pulse_width_range(
+        self, min_pulse: int = 750, max_pulse: int = 2250
+    ) -> None:
         """Change min and max pulse widths."""
         self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF)
         max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF
         self._duty_range = int(max_duty - self._min_duty)
 
     @property
-    def fraction(self):
+    def fraction(self) -> Optional[float]:
         """Pulse width expressed as fraction between 0.0 (`min_pulse`) and 1.0 (`max_pulse`).
         For conventional servos, corresponds to the servo position as a fraction
         of the actuation range. Is None when servo is diabled (pulsewidth of 0ms).
@@ -45,7 +57,7 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
         return (self._pwm_out.duty_cycle - self._min_duty) / self._duty_range
 
     @fraction.setter
-    def fraction(self, value):
+    def fraction(self, value: Optional[float]) -> None:
         if value is None:
             self._pwm_out.duty_cycle = 0  # disable the motor
             return
@@ -85,14 +97,21 @@ class Servo(_BaseServo):
          Test carefully to find the safe minimum and maximum.
     """
 
-    def __init__(self, pwm_out, *, actuation_range=180, min_pulse=750, max_pulse=2250):
+    def __init__(
+        self,
+        pwm_out: PWMOut,
+        *,
+        actuation_range: int = 180,
+        min_pulse: int = 750,
+        max_pulse: int = 2250
+    ) -> None:
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self.actuation_range = actuation_range
         """The physical range of motion of the servo in degrees."""
         self._pwm = pwm_out
 
     @property
-    def angle(self):
+    def angle(self) -> Optional[float]:
         """The servo angle in degrees. Must be in the range ``0`` to ``actuation_range``.
         Is None when servo is disabled."""
         if self.fraction is None:  # special case for disabled servos
@@ -100,7 +119,7 @@ class Servo(_BaseServo):
         return self.actuation_range * self.fraction
 
     @angle.setter
-    def angle(self, new_angle):
+    def angle(self, new_angle: Optional[int]) -> None:
         if new_angle is None:  # disable the servo by sending 0 signal
             self.fraction = None
             return
@@ -116,22 +135,27 @@ class ContinuousServo(_BaseServo):
     :param int max_pulse: The maximum pulse width of the servo in microseconds."""
 
     @property
-    def throttle(self):
+    def throttle(self) -> float:
         """How much power is being delivered to the motor. Values range from ``-1.0`` (full
         throttle reverse) to ``1.0`` (full throttle forwards.) ``0`` will stop the motor from
         spinning."""
         return self.fraction * 2 - 1
 
     @throttle.setter
-    def throttle(self, value):
+    def throttle(self, value: float) -> None:
         if value > 1.0 or value < -1.0:
             raise ValueError("Throttle must be between -1.0 and 1.0")
         if value is None:
             raise ValueError("Continuous servos cannot spin freely")
         self.fraction = (value + 1) / 2
 
-    def __enter__(self):
+    def __enter__(self) -> "ContinuousServo":
         return self
 
-    def __exit__(self, exception_type, exception_value, traceback):
+    def __exit__(
+        self,
+        exception_type: Optional[Type[type]],
+        exception_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
         self.throttle = 0

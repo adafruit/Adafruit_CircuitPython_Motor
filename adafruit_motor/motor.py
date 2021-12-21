@@ -20,6 +20,13 @@ factors already.
 * Author(s): Scott Shawcroft
 """
 
+try:
+    from typing import Optional, Type
+    from types import TracebackType
+    from pwmio import PWMOut
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
@@ -48,14 +55,14 @@ class DCMotor:
     :param ~pwmio.PWMOut negative_pwm: The motor input that causes the motor to spin backwards
       when high and the other is low."""
 
-    def __init__(self, positive_pwm, negative_pwm):
+    def __init__(self, positive_pwm: PWMOut, negative_pwm: PWMOut) -> None:
         self._positive = positive_pwm
         self._negative = negative_pwm
         self._throttle = None
         self._decay_mode = FAST_DECAY
 
     @property
-    def throttle(self):
+    def throttle(self) -> Optional[float]:
         """Motor speed, ranging from -1.0 (full speed reverse) to 1.0 (full speed forward),
         or ``None`` (controller off).
         If ``None``, both PWMs are turned full off. If ``0.0``, both PWMs are turned full on.
@@ -63,7 +70,7 @@ class DCMotor:
         return self._throttle
 
     @throttle.setter
-    def throttle(self, value):
+    def throttle(self, value: Optional[float]) -> None:
         if value is not None and (value > 1.0 or value < -1.0):
             raise ValueError("Throttle must be None or between -1.0 and +1.0")
         self._throttle = value
@@ -91,14 +98,14 @@ class DCMotor:
                     self._negative.duty_cycle = 0
 
     @property
-    def decay_mode(self):
+    def decay_mode(self) -> int:
         """Motor controller recirculation current decay mode. A value of ``motor.FAST_DECAY``
         sets the motor controller to the default fast recirculation current decay mode
         (coasting); ``motor.SLOW_DECAY`` sets slow decay (braking) mode."""
         return self._decay_mode
 
     @decay_mode.setter
-    def decay_mode(self, mode=FAST_DECAY):
+    def decay_mode(self, mode: int = FAST_DECAY) -> None:
         if mode in (FAST_DECAY, SLOW_DECAY):
             self._decay_mode = mode
         else:
@@ -106,8 +113,13 @@ class DCMotor:
                 "Decay mode value must be either motor.FAST_DECAY or motor.SLOW_DECAY"
             )
 
-    def __enter__(self):
+    def __enter__(self) -> "DCMotor":
         return self
 
-    def __exit__(self, exception_type, exception_value, traceback):
+    def __exit__(
+        self,
+        exception_type: Optional[Type[type]],
+        exception_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
         self.throttle = None
