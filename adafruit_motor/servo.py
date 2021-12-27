@@ -16,7 +16,7 @@ try:
     from typing import Optional, Type
     from types import TracebackType
     from pwmio import PWMOut
-except ImportError:
+except (ImportError, NotImplementedError):
     pass
 
 
