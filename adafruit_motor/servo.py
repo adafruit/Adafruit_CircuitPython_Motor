@@ -15,6 +15,8 @@ loops enable pulse width modulated control to determine position or rotational s
 try:
     from typing import Optional, Type
     from types import TracebackType
+
+    # pylint: disable-msg=unused-import
     from pwmio import PWMOut
 except (ImportError, NotImplementedError):
     pass
@@ -33,7 +35,7 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
     :param int max_pulse: The maximum pulse length of the servo in microseconds."""
 
     def __init__(
-        self, pwm_out: PWMOut, *, min_pulse: int = 750, max_pulse: int = 2250
+        self, pwm_out: "PWMOut", *, min_pulse: int = 750, max_pulse: int = 2250
     ) -> None:
         self._pwm_out = pwm_out
         self.set_pulse_width_range(min_pulse, max_pulse)
@@ -99,7 +101,7 @@ class Servo(_BaseServo):
 
     def __init__(
         self,
-        pwm_out: PWMOut,
+        pwm_out: "PWMOut",
         *,
         actuation_range: int = 180,
         min_pulse: int = 750,
