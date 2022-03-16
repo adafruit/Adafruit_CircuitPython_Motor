@@ -75,7 +75,7 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
         """
         if self._pwm_out.duty_cycle == 0:  # Special case for disabled servos
             return None
-        return self._pwm_out.duty_cycle
+        return ((self._pwm_out.duty_cycle / 0xFFFF) * 1000000) / self._pwm_out.frequency
 
     @pulse_width.setter
     def pulse_width(self, value):
