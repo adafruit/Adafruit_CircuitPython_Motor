@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
 name: Release Actions
 
 on:
@@ -20,10 +24,10 @@ jobs:
         awk -F '\/' '{ print tolower($2) }' |
         tr '_' '-'
         )
-    - name: Set up Python 3.6
-      uses: actions/setup-python@v1
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.6
+        python-version: "3.x"
     - name: Versions
       run: |
         python3 --version
@@ -63,7 +67,7 @@ jobs:
         echo ::set-output name=setup-py::$( find . -wholename './setup.py' )
     - name: Set up Python
       if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: '3.x'
     - name: Install dependencies

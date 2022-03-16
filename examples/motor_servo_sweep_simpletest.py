@@ -1,10 +1,13 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 import time
 import board
-import pulseio
+import pwmio
 from adafruit_motor import servo
 
 # create a PWMOut object on the control pin.
-pwm = pulseio.PWMOut(board.D5, duty_cycle=0, frequency=50)
+pwm = pwmio.PWMOut(board.D5, duty_cycle=0, frequency=50)
 
 # To get the full range of the servo you will likely need to adjust the min_pulse and max_pulse to
 # match the stall points of the servo.

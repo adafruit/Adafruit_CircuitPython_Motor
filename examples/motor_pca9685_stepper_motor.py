@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 # This example uses an Adafruit Stepper and DC Motor FeatherWing to run a Stepper Motor.
 #   https://www.adafruit.com/product/2927
 

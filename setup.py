@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
 """A setuptools based setup module.
 
 See:
@@ -41,8 +45,6 @@ setup(
         "Topic :: System :: Hardware",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
     ],
     # What does your project relate to?
     keywords="adafruit servo stepper motor hardware micropython circuitpython",

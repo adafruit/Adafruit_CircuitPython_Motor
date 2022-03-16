@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
 import os
 import sys
 
@@ -22,8 +26,8 @@ extensions = [
 # autodoc_mock_imports = ["micropython"]
 
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3.4", None),
-    "CircuitPython": ("https://circuitpython.readthedocs.io/en/latest/", None),
+    "python": ("https://docs.python.org/3", None),
+    "CircuitPython": ("https://docs.circuitpython.org/en/latest/", None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
@@ -38,6 +42,9 @@ master_doc = "index"
 project = "Adafruit motor Library"
 copyright = "2017 Scott Shawcroft"
 author = "Scott Shawcroft"
+
+# Ignore imports of these modules, which sphinx will not know about.
+autodoc_mock_imports = ["pwmio"]
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -1,24 +1,7 @@
-# The MIT License (MIT)
+# SPDX-FileCopyrightText: 2017 Scott Shawcroft  for Adafruit Industries
 #
-# Copyright (c) 2017 Scott Shawcroft for Adafruit Industries LLC
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# SPDX-License-Identifier: MIT
+
 """
 `adafruit_motor.servo`
 ====================================================
@@ -29,6 +12,16 @@ loops enable pulse width modulated control to determine position or rotational s
 * Author(s): Scott Shawcroft
 """
 
+try:
+    from typing import Optional, Type
+    from types import TracebackType
+
+    # pylint: disable-msg=unused-import
+    from pwmio import PWMOut
+except (ImportError, NotImplementedError):
+    pass
+
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
@@ -37,22 +30,26 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 class _BaseServo:  # pylint: disable-msg=too-few-public-methods
     """Shared base class that handles pulse output based on a value between 0 and 1.0
 
-       :param ~pulseio.PWMOut pwm_out: PWM output object.
-       :param int min_pulse: The minimum pulse length of the servo in microseconds.
-       :param int max_pulse: The maximum pulse length of the servo in microseconds."""
+    :param ~pwmio.PWMOut pwm_out: PWM output object.
+    :param int min_pulse: The minimum pulse length of the servo in microseconds.
+    :param int max_pulse: The maximum pulse length of the servo in microseconds."""
 
-    def __init__(self, pwm_out, *, min_pulse=750, max_pulse=2250):
+    def __init__(
+        self, pwm_out: "PWMOut", *, min_pulse: int = 750, max_pulse: int = 2250
+    ) -> None:
         self._pwm_out = pwm_out
         self.set_pulse_width_range(min_pulse, max_pulse)
 
-    def set_pulse_width_range(self, min_pulse=750, max_pulse=2250):
+    def set_pulse_width_range(
+        self, min_pulse: int = 750, max_pulse: int = 2250
+    ) -> None:
         """Change min and max pulse widths."""
         self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF)
         max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF
         self._duty_range = int(max_duty - self._min_duty)
 
     @property
-    def fraction(self):
+    def fraction(self) -> Optional[float]:
         """Pulse width expressed as fraction between 0.0 (`min_pulse`) and 1.0 (`max_pulse`).
         For conventional servos, corresponds to the servo position as a fraction
         of the actuation range. Is None when servo is diabled (pulsewidth of 0ms).
@@ -62,7 +59,7 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
         return (self._pwm_out.duty_cycle - self._min_duty) / self._duty_range
 
     @fraction.setter
-    def fraction(self, value):
+    def fraction(self, value: Optional[float]) -> None:
         if value is None:
             self._pwm_out.duty_cycle = 0  # disable the motor
             return
@@ -94,7 +91,7 @@ class _BaseServo:  # pylint: disable-msg=too-few-public-methods
 class Servo(_BaseServo):
     """Control the position of a servo.
 
-       :param ~pulseio.PWMOut pwm_out: PWM output object.
+       :param ~pwmio.PWMOut pwm_out: PWM output object.
        :param int actuation_range: The physical range of motion of the servo in degrees, \
            for the given ``min_pulse`` and ``max_pulse`` values.
        :param int min_pulse: The minimum pulse width of the servo in microseconds.
@@ -121,14 +118,21 @@ class Servo(_BaseServo):
          Test carefully to find the safe minimum and maximum.
     """
 
-    def __init__(self, pwm_out, *, actuation_range=180, min_pulse=750, max_pulse=2250):
+    def __init__(
+        self,
+        pwm_out: "PWMOut",
+        *,
+        actuation_range: int = 180,
+        min_pulse: int = 750,
+        max_pulse: int = 2250
+    ) -> None:
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self.actuation_range = actuation_range
         """The physical range of motion of the servo in degrees."""
         self._pwm = pwm_out
 
     @property
-    def angle(self):
+    def angle(self) -> Optional[float]:
         """The servo angle in degrees. Must be in the range ``0`` to ``actuation_range``.
         Is None when servo is disabled."""
         if self.fraction is None:  # special case for disabled servos
@@ -136,7 +140,7 @@ class Servo(_BaseServo):
         return self.actuation_range * self.fraction
 
     @angle.setter
-    def angle(self, new_angle):
+    def angle(self, new_angle: Optional[int]) -> None:
         if new_angle is None:  # disable the servo by sending 0 signal
             self.fraction = None
             return
@@ -148,26 +152,31 @@ class Servo(_BaseServo):
 class ContinuousServo(_BaseServo):
     """Control a continuous rotation servo.
 
-       :param int min_pulse: The minimum pulse width of the servo in microseconds.
-       :param int max_pulse: The maximum pulse width of the servo in microseconds."""
+    :param int min_pulse: The minimum pulse width of the servo in microseconds.
+    :param int max_pulse: The maximum pulse width of the servo in microseconds."""
 
     @property
-    def throttle(self):
+    def throttle(self) -> float:
         """How much power is being delivered to the motor. Values range from ``-1.0`` (full
-           throttle reverse) to ``1.0`` (full throttle forwards.) ``0`` will stop the motor from
-           spinning."""
+        throttle reverse) to ``1.0`` (full throttle forwards.) ``0`` will stop the motor from
+        spinning."""
         return self.fraction * 2 - 1
 
     @throttle.setter
-    def throttle(self, value):
+    def throttle(self, value: float) -> None:
         if value > 1.0 or value < -1.0:
             raise ValueError("Throttle must be between -1.0 and 1.0")
         if value is None:
             raise ValueError("Continuous servos cannot spin freely")
         self.fraction = (value + 1) / 2
 
-    def __enter__(self):
+    def __enter__(self) -> "ContinuousServo":
         return self
 
-    def __exit__(self, exception_type, exception_value, traceback):
+    def __exit__(
+        self,
+        exception_type: Optional[Type[type]],
+        exception_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
         self.throttle = 0
