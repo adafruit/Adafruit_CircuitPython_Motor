@@ -23,7 +23,12 @@ factors already.
 try:
     from typing import Optional, Type
     from types import TracebackType
-    from pwmio import PWMOut
+
+    try:
+        from pwmio import PWMOut
+    except NotImplementedError:
+        from circuitpython_typing.pwmio import PWMOut
+
 except ImportError:
     pass
 
