@@ -20,8 +20,13 @@ from micropython import const
 
 try:
     from typing import Union, Optional
-    from pwmio import PWMOut
     from digitalio import DigitalInOut
+
+    try:
+        from pwmio import PWMOut
+    except NotImplementedError:
+        from circuitpython_typing.pwmio import PWMOut
+
 except ImportError:
     pass
 

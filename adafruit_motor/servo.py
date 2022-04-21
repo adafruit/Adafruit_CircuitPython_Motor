@@ -17,7 +17,11 @@ try:
     from types import TracebackType
 
     # pylint: disable-msg=unused-import
-    from pwmio import PWMOut
+    try:
+        from pwmio import PWMOut
+    except NotImplementedError:
+        from circuitpython_typing.pwmio import PWMOut
+
 except (ImportError, NotImplementedError):
     pass
 
