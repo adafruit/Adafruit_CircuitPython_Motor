@@ -36,7 +36,7 @@ setup(
     author_email="circuitpython@adafruit.com",
     install_requires=[
         "Adafruit-Blinka>=7.0.0",
-        "adafruit-circuitpython-typing",
+        "adafruit-circuitpython-typing>=1.5.0",
     ],
     # Choose your license
     license="MIT",
