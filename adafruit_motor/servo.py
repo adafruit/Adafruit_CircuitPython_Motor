@@ -113,7 +113,10 @@ class Servo(_BaseServo):
     ) -> None:
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self.actuation_range = actuation_range
-        """The physical range of motion of the servo in degrees."""
+        """The physical range of motion of the servo in degrees.
+        
+        :type: float
+        """
         self._pwm = pwm_out
 
     @property
