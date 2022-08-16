@@ -26,7 +26,7 @@ except (ImportError, NotImplementedError):
     pass
 
 
-__version__ = "0.0.0-auto.0"
+__version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
 # We disable the too few public methods check because this is a private base class for the two types
