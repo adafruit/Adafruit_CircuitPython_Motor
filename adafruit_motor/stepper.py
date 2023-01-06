@@ -113,8 +113,13 @@ class StepperMotor:
             # set a safe pwm freq for each output
             self._coil = (ain2, bin1, ain1, bin2)
             for i in range(4):
-                if self._coil[i].frequency < 1500:
+                if self._coil[i].frequency < 1500 and self._coil[i].variable_frequency:
                     self._coil[i].frequency = 2000
+                else:
+                    raise RuntimeError(
+                        "PWMOut outputs must either be set to at least "
+                        "1500 Hz or allow variable frequency."
+                    )
             if microsteps < 2:
                 raise ValueError("Microsteps must be at least 2")
             if microsteps % 2 == 1:
