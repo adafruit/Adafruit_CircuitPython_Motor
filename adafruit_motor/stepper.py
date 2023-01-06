@@ -116,7 +116,7 @@ class StepperMotor:
                 if self._coil[i].frequency < 1500 and self._coil[i].variable_frequency:
                     self._coil[i].frequency = 2000
                 else:
-                    raise RuntimeError(
+                    raise ValueError(
                         "PWMOut outputs must either be set to at least "
                         "1500 Hz or allow variable frequency."
                     )
