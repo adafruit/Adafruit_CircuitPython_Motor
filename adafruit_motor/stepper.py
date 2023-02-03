@@ -114,7 +114,10 @@ class StepperMotor:
             self._coil = (ain2, bin1, ain1, bin2)
             for i in range(4):
                 if self._coil[i].frequency < 1500:
-                    if hasattr(self._coil[i], "variable_frequency") and not self._coil[i].variable_frequency:
+                    if (
+                        hasattr(self._coil[i], "variable_frequency")
+                        and not self._coil[i].variable_frequency
+                    ):
                         raise ValueError(
                             "PWMOut outputs must either be set to at least "
                             "1500 Hz or allow variable frequency."
