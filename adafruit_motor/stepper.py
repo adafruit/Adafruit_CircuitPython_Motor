@@ -114,15 +114,13 @@ class StepperMotor:
             self._coil = (ain2, bin1, ain1, bin2)
             for i in range(4):
                 if self._coil[i].frequency < 1500:
-                    if (
-                        hasattr(self._coil[i], "variable_frequency")
-                        and not self._coil[i].variable_frequency
-                    ):
+                    try:
+                        self._coil[i].frequency = 2000
+                    except AttributeError:
                         raise ValueError(
                             "PWMOut outputs must either be set to at least "
                             "1500 Hz or allow variable frequency."
                         )
-                    self._coil[i].frequency = 2000
             if microsteps < 2:
                 raise ValueError("Microsteps must be at least 2")
             if microsteps % 2 == 1:
