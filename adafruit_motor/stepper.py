@@ -116,11 +116,11 @@ class StepperMotor:
                 if self._coil[i].frequency < 1500:
                     try:
                         self._coil[i].frequency = 2000
-                    except AttributeError:
+                    except AttributeError as err:
                         raise ValueError(
                             "PWMOut outputs must either be set to at least "
                             "1500 Hz or allow variable frequency."
-                        )
+                        ) from err
             if microsteps < 2:
                 raise ValueError("Microsteps must be at least 2")
             if microsteps % 2 == 1:
