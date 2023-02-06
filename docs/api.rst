@@ -5,7 +5,7 @@
    :members:
 
 .. automodule:: adafruit_motor.servo
-  :members:
+   :members:
 
 .. automodule:: adafruit_motor.stepper
- :members:
+   :members:
