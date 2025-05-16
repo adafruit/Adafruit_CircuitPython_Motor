@@ -21,8 +21,8 @@ factors already.
 """
 
 try:
-    from typing import Optional, Type
     from types import TracebackType
+    from typing import Optional, Type
 
     try:
         from pwmio import PWMOut
@@ -94,13 +94,12 @@ class DCMotor:
                 else:
                     self._positive.duty_cycle = 0xFFFF
                     self._negative.duty_cycle = 0xFFFF - duty_cycle
-            else:  # Default Fast Decay (Coasting) Mode
-                if value < 0:
-                    self._positive.duty_cycle = 0
-                    self._negative.duty_cycle = duty_cycle
-                else:
-                    self._positive.duty_cycle = duty_cycle
-                    self._negative.duty_cycle = 0
+            elif value < 0:
+                self._positive.duty_cycle = 0
+                self._negative.duty_cycle = duty_cycle
+            else:
+                self._positive.duty_cycle = duty_cycle
+                self._negative.duty_cycle = 0
 
     @property
     def decay_mode(self) -> int:
@@ -111,12 +110,10 @@ class DCMotor:
 
     @decay_mode.setter
     def decay_mode(self, mode: int = FAST_DECAY) -> None:
-        if mode in (FAST_DECAY, SLOW_DECAY):
+        if mode in {FAST_DECAY, SLOW_DECAY}:
             self._decay_mode = mode
         else:
-            raise ValueError(
-                "Decay mode value must be either motor.FAST_DECAY or motor.SLOW_DECAY"
-            )
+            raise ValueError("Decay mode value must be either motor.FAST_DECAY or motor.SLOW_DECAY")
 
     def __enter__(self) -> "DCMotor":
         return self

@@ -9,8 +9,10 @@
 #   e.g., RP2040 Pico pins GP28, GP27
 
 import time
+
 import board
 import pwmio
+
 from adafruit_motor import motor
 
 PWM_PIN_A = board.GP28  # pick any pwm pins on their own channels

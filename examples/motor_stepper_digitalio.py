@@ -5,8 +5,10 @@
 # like a DRV8833, TB6612 or L298N.
 
 import time
+
 import board
 import digitalio
+
 from adafruit_motor import stepper
 
 DELAY = 0.01

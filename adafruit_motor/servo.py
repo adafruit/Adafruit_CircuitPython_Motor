@@ -13,10 +13,9 @@ loops enable pulse width modulated control to determine position or rotational s
 """
 
 try:
-    from typing import Optional, Type
     from types import TracebackType
+    from typing import Optional, Type
 
-    # pylint: disable-msg=unused-import
     try:
         from pwmio import PWMOut
     except NotImplementedError:
@@ -32,22 +31,18 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Motor.git"
 
 # We disable the too few public methods check because this is a private base class for the two types
 # of servos.
-class _BaseServo:  # pylint: disable-msg=too-few-public-methods
+class _BaseServo:
     """Shared base class that handles pulse output based on a value between 0 and 1.0
 
     :param ~pwmio.PWMOut pwm_out: PWM output object.
     :param int min_pulse: The minimum pulse length of the servo in microseconds.
     :param int max_pulse: The maximum pulse length of the servo in microseconds."""
 
-    def __init__(
-        self, pwm_out: "PWMOut", *, min_pulse: int = 750, max_pulse: int = 2250
-    ) -> None:
+    def __init__(self, pwm_out: "PWMOut", *, min_pulse: int = 750, max_pulse: int = 2250) -> None:
         self._pwm_out = pwm_out
         self.set_pulse_width_range(min_pulse, max_pulse)
 
-    def set_pulse_width_range(
-        self, min_pulse: int = 750, max_pulse: int = 2250
-    ) -> None:
+    def set_pulse_width_range(self, min_pulse: int = 750, max_pulse: int = 2250) -> None:
         """Change min and max pulse widths."""
         self._min_duty = int((min_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF)
         max_duty = (max_pulse * self._pwm_out.frequency) / 1000000 * 0xFFFF
@@ -110,7 +105,7 @@ class Servo(_BaseServo):
         *,
         actuation_range: int = 180,
         min_pulse: int = 750,
-        max_pulse: int = 2250
+        max_pulse: int = 2250,
     ) -> None:
         super().__init__(pwm_out, min_pulse=min_pulse, max_pulse=max_pulse)
         self.actuation_range = actuation_range
