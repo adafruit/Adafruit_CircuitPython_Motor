@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: MIT
 
 import time
+
 import board
 import pwmio
+
 from adafruit_motor import servo
 
 # create a PWMOut object on the control pin.

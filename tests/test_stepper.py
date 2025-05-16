@@ -20,13 +20,11 @@ from unittest.mock import MagicMock
 
 # Fix up the path to include our neighboring module.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-micropython = MagicMock()  # pylint: disable-msg=invalid-name
+micropython = MagicMock()
 micropython.const = lambda x: x
 sys.modules["micropython"] = micropython
 
-from adafruit_motor import stepper  # pylint: disable-msg=wrong-import-position
-
-# pylint: disable=consider-using-in
+from adafruit_motor import stepper
 
 
 class Coil:
@@ -76,9 +74,7 @@ def test_double_coil():
     for i in range(6):  # Test 6 steps so we wrap around
         motor.onestep(style=stepper.DOUBLE)
         for j in range(4):
-            assert coil[j].duty_cycle == (
-                0xFFFF if i % 4 == j or (i + 1) % 4 == j else 0
-            )
+            assert coil[j].duty_cycle == (0xFFFF if i % 4 == j or (i + 1) % 4 == j else 0)
 
 
 def test_interleave_steps():

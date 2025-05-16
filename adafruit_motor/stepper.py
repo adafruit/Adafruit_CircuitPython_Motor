@@ -19,7 +19,8 @@ import math
 from micropython import const
 
 try:
-    from typing import Union, Optional
+    from typing import Optional, Union
+
     from digitalio import DigitalInOut
 
     try:
@@ -56,9 +57,7 @@ _SINGLE_STEPS = bytes([0b0010, 0b0100, 0b0001, 0b1000])
 
 _DOUBLE_STEPS = bytes([0b1010, 0b0110, 0b0101, 0b1001])
 
-_INTERLEAVE_STEPS = bytes(
-    [0b1010, 0b0010, 0b0110, 0b0100, 0b0101, 0b0001, 0b1001, 0b1000]
-)
+_INTERLEAVE_STEPS = bytes([0b1010, 0b0010, 0b0110, 0b0100, 0b0101, 0b0001, 0b1001, 0b1000])
 
 
 class StepperMotor:
@@ -98,7 +97,7 @@ class StepperMotor:
         bin1: Union[PWMOut, DigitalInOut],
         bin2: Union[PWMOut, DigitalInOut],
         *,
-        microsteps: Optional[int] = 16
+        microsteps: Optional[int] = 16,
     ) -> None:
         if microsteps is None:
             #
@@ -179,9 +178,7 @@ class StepperMotor:
             else:
                 coil.duty_cycle = 0
 
-    def onestep(  # pylint: disable=too-many-branches
-        self, *, direction: int = FORWARD, style: int = SINGLE
-    ) -> None:
+    def onestep(self, *, direction: int = FORWARD, style: int = SINGLE) -> None:
         """Performs one step of a particular style. The actual rotation amount will vary by style.
         `SINGLE` and `DOUBLE` will normal cause a full step rotation. `INTERLEAVE` will normally
         do a half step rotation. `MICROSTEP` will perform the smallest configured step.
@@ -234,7 +231,7 @@ class StepperMotor:
                     style == DOUBLE and current_interleave % 2 == 0
                 ):
                     step_size = half_step
-                elif style in (SINGLE, DOUBLE):
+                elif style in {SINGLE, DOUBLE}:
                     step_size = full_step
 
         if direction == FORWARD:
