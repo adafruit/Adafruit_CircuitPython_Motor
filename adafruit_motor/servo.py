@@ -140,18 +140,22 @@ class ContinuousServo(_BaseServo):
     :param int max_pulse: The maximum pulse width of the servo in microseconds."""
 
     @property
-    def throttle(self) -> float:
+    def throttle(self) -> Optional[float]:
         """How much power is being delivered to the motor. Values range from ``-1.0`` (full
         throttle reverse) to ``1.0`` (full throttle forwards.) ``0`` will stop the motor from
-        spinning."""
-        return self.fraction * 2 - 1
+        spinning. Is ``None`` when the servo is disabled."""
+        fraction = self.fraction
+        if fraction is None:
+            return None
+        return fraction * 2 - 1
 
     @throttle.setter
-    def throttle(self, value: float) -> None:
+    def throttle(self, value: Optional[float]) -> None:
+        if value is None:
+            self.fraction = None
+            return
         if value > 1.0 or value < -1.0:
             raise ValueError("Throttle must be between -1.0 and 1.0")
-        if value is None:
-            raise ValueError("Continuous servos cannot spin freely")
         self.fraction = (value + 1) / 2
 
     def __enter__(self) -> "ContinuousServo":
