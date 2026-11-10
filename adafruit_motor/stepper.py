@@ -21,11 +21,20 @@ from micropython import const
 try:
     from typing import Optional, Union
 
-    from digitalio import DigitalInOut
+    try:
+        from digitalio import DigitalInOut
+    except (ImportError, RuntimeError) as exc:
+        if not isinstance(exc, ImportError) and not isinstance(exc.__cause__, ImportError):
+            raise
 
     try:
         from pwmio import PWMOut
-    except NotImplementedError:
+    except (ImportError, RuntimeError) as exc:
+        # Blinka wraps a missing platform library in RuntimeError.
+        if not isinstance(exc, (ImportError, NotImplementedError)) and not isinstance(
+            exc.__cause__, ImportError
+        ):
+            raise
         from circuitpython_typing.pwmio import PWMOut
 
 except ImportError:
@@ -92,10 +101,10 @@ class StepperMotor:
 
     def __init__(
         self,
-        ain1: Union[PWMOut, DigitalInOut],
-        ain2: Union[PWMOut, DigitalInOut],
-        bin1: Union[PWMOut, DigitalInOut],
-        bin2: Union[PWMOut, DigitalInOut],
+        ain1: Union[PWMOut, "DigitalInOut"],
+        ain2: Union[PWMOut, "DigitalInOut"],
+        bin1: Union[PWMOut, "DigitalInOut"],
+        bin2: Union[PWMOut, "DigitalInOut"],
         *,
         microsteps: Optional[int] = 16,
     ) -> None:

@@ -26,7 +26,12 @@ try:
 
     try:
         from pwmio import PWMOut
-    except NotImplementedError:
+    except (ImportError, RuntimeError) as exc:
+        # Blinka wraps a missing platform library in RuntimeError.
+        if not isinstance(exc, (ImportError, NotImplementedError)) and not isinstance(
+            exc.__cause__, ImportError
+        ):
+            raise
         from circuitpython_typing.pwmio import PWMOut
 
 except ImportError:
